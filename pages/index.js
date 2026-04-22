@@ -17,14 +17,10 @@ export default function HomePage() {
       setLoading(true);
 
       const data = await searchMedia(query);
-
-      const filtered = data.filter(
-        (item) => item.media_type === "movie" || item.media_type === "tv"
-      );
-
-      setResults(filtered);
+      setResults(data);
     } catch (error) {
       console.error(error);
+      setResults([]);
     } finally {
       setLoading(false);
     }

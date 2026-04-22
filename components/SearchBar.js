@@ -24,7 +24,11 @@ export default function SearchBar({ onSearch }) {
         onChange={handleChange}
       />
 
-      {query && <ClearButton onClick={handleClear}>X</ClearButton>}
+      {query && (
+        <ClearButton type="button" onClick={handleClear}>
+          X
+        </ClearButton>
+      )}
     </Wrapper>
   );
 }
