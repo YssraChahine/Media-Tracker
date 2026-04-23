@@ -16,6 +16,13 @@ export default async function handler(request, response) {
   if (request.method === "POST") {
     try {
       const { apiId, title, type, imageUrl } = request.body;
+
+      const existing = await Media.findOne({ apiId });
+
+      if (existing) {
+        return response.status(409).json({ message: "Already exists" });
+      }
+
       const newMedia = await Media.create({
         apiId,
         title,
