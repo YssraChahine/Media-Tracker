@@ -4,6 +4,7 @@ import SearchBar from "@/components/SearchBar";
 import styled from "styled-components";
 import Link from "next/link";
 import useSWR from "swr";
+import MediaCard from "@/components/MediaCard";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -11,7 +12,7 @@ export default function HomePage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const {data: media =[], mutate} = useSWR("/api/media", fetcher);
+  const { data: media = [], mutate } = useSWR("/api/media", fetcher);
   const addedIds = media.map((item) => Number(item.apiId));
 
   async function handleSearch(query) {
@@ -54,7 +55,8 @@ export default function HomePage() {
 
       if (!response.ok) {
         throw new Error("Failed to save");
-      } mutate();
+      }
+      mutate();
     } catch (error) {
       console.error(error);
       alert("Error saving media");
@@ -77,28 +79,12 @@ export default function HomePage() {
 
       <Grid>
         {results.map((item) => (
-          <Card key={item.id}>
-            <Poster
-              src={
-                item.poster_path
-                  ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-                  : "/placeholder.jpg"
-              }
-              alt={item.title || item.name}
-            />
-
-            <Info>
-              <Title>{item.title || item.name}</Title>
-              <Type>{item.media_type}</Type>
-
-              <AddButton
-                onClick={() => handleAdd(item)}
-                disabled={addedIds.includes(item.id)}
-              >
-                {addedIds.includes(item.id) ? "Added" : "+ Add"}
-              </AddButton>
-            </Info>
-          </Card>
+          <MediaCard
+            key={item.id}
+            item={item}
+            onAdd={handleAdd}
+            isAdded={addedIds.includes(item.id)}
+          />
         ))}
       </Grid>
     </Main>
@@ -106,7 +92,7 @@ export default function HomePage() {
 }
 
 const Main = styled.main`
-  max-width: 700px;
+  max-width: 900px;
   margin: 40px auto;
   padding: 20px;
 `;
@@ -123,56 +109,8 @@ const Message = styled.p`
 
 const Grid = styled.div`
   display: grid;
-  gap: 16px;
-`;
-
-const Card = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 12px;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
-  transition: transform 0.15s ease;
-  &:hover {
-    transform: translateY(-2px);
-  }
-`;
-
-const Poster = styled.img`
-  width: 80px;
-  border-radius: 6px;
-`;
-
-const Info = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Title = styled.p`
-  font-weight: 600;
-  margin: 0;
-`;
-
-const Type = styled.p`
-  font-size: 0.8rem;
-  color: #888;
-`;
-
-const AddButton = styled.button`
-  margin-top: 8px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 0.8rem;
-  transition: all 0.15s ease;
-  background: ${({ disabled }) => (disabled ? "#ccc" : "black")};
-  color: ${({ disabled }) => (disabled ? "#666" : "white")};
-  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  &:hover {
-    background: ${({ disabled }) => (disabled ? "#ccc" : "#333")};
-  }
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
 `;
 
 const ViewButton = styled.button`
