@@ -13,6 +13,13 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
 
   const { data: media = [], mutate } = useSWR("/api/media", fetcher);
+
+  const {
+    data: featured = [],
+    isLoading: featuredLoading,
+    error: featuredError,
+  } = useSWR("/api/featured", fetcher);
+
   const addedIds = media.map((item) => Number(item.apiId));
 
   async function handleSearch(query) {
@@ -62,23 +69,32 @@ export default function HomePage() {
       alert("Error saving media");
     }
   }
+  const displayData = results.length > 0 ? results : featured;
 
   return (
     <Main>
       <Heading>Media Tracker</Heading>
 
       <Link href="/media">
-        <ViewButton>My List</ViewButton>
+        <ViewButton>View My List</ViewButton>
       </Link>
 
       <SearchBar onSearch={handleSearch} />
 
-      {loading && <Message>Loading...</Message>}
+      {loading && <Message>Searching...</Message>}
 
-      {!loading && results.length === 0 && <Message>No results found</Message>}
+      {!loading && featuredLoading && (
+        <Message>Loading popular media...</Message>
+      )}
+
+      {featuredError && <Message>Error loading content.</Message>}
+
+      {!loading && results.length === 0 && !featuredLoading && (
+        <SubHeading>Popular right now</SubHeading>
+      )}
 
       <Grid>
-        {results.map((item) => (
+        {displayData.map((item) => (
           <MediaCard
             key={item.id}
             item={item}
@@ -125,4 +141,11 @@ const ViewButton = styled.button`
   &:hover {
     background: #0059c1;
   }
+`;
+
+const SubHeading = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #666;
 `;
