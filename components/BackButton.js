@@ -20,7 +20,6 @@ const Button = styled.button`
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.15s ease;
-
   &:hover {
     background: #ddd;
   }

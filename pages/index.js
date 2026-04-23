@@ -1,27 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { searchMedia } from "@/utils/tmdb";
 import SearchBar from "@/components/SearchBar";
 import styled from "styled-components";
 import Link from "next/link";
+import useSWR from "swr";
+
+const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function HomePage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [addedIds, setAddedIds] = useState([]);
 
-  useEffect(() => {
-    async function fetchSavedMedia() {
-      try {
-        const response = await fetch("/api/media");
-        const data = await response.json();
-        const ids = data.map((item) => Number(item.apiId));
-        setAddedIds(ids);
-      } catch (error) {
-        console.error("Failed to fetch saved media", error);
-      }
-    }
-    fetchSavedMedia();
-  }, []);
+  const {data: media =[], mutate} = useSWR("/api/media", fetcher);
+  const addedIds = media.map((item) => Number(item.apiId));
 
   async function handleSearch(query) {
     if (!query) {
@@ -33,7 +24,10 @@ export default function HomePage() {
       setLoading(true);
 
       const data = await searchMedia(query);
-      setResults(data);
+      const filtered = data.filter(
+        (item) => item.media_type === "movie" || item.media_type === "tv"
+      );
+      setResults(filtered);
     } catch (error) {
       console.error(error);
       setResults([]);
@@ -58,15 +52,9 @@ export default function HomePage() {
         }),
       });
 
-      if (response.status === 409) {
-        setAddedIds((prev) => [...prev, item.id]);
-        return;
-      }
-
       if (!response.ok) {
         throw new Error("Failed to save");
-      }
-      setAddedIds((prev) => [...prev, item.id]);
+      } mutate();
     } catch (error) {
       console.error(error);
       alert("Error saving media");
