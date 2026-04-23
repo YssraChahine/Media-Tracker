@@ -10,7 +10,7 @@ export default function MyMediaCard({ item, onDelete }) {
       <Content>
         <TopRow>
           <Title>{item.title}</Title>
-          <DeleteButton onClick={() => onDelete(item._id)}>X</DeleteButton>
+          <DeleteButton type="button" onClick={() => onDelete(item._id)}>X</DeleteButton>
         </TopRow>
 
         <Type>{item.type}</Type>

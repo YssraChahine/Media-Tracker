@@ -3,10 +3,15 @@ import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import MyMediaCard from "@/components/MyMediaCard";
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
+const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function MediaPage() {
-  const { data: media = [], mutate } = useSWR("/api/media", fetcher);
+  const {
+    data: media = [],
+    error,
+    isLoading,
+    mutate,
+  } = useSWR("/api/media", fetcher);
 
   async function handleDelete(id) {
     try {
@@ -21,6 +26,23 @@ export default function MediaPage() {
       console.error(error);
     }
   }
+  if (isLoading) {
+    return (
+      <Main>
+        <BackButton />
+        <Message>Loading...</Message>
+      </Main>
+    );
+  }
+  if (error) {
+    return (
+      <Main>
+        <BackButton />
+        <Message>Error loading media.</Message>
+      </Main>
+    );
+  }
+
   return (
     <Main>
       <BackButton />
