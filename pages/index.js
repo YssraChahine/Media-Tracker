@@ -1,11 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { searchMedia } from "@/utils/tmdb";
 import SearchBar from "@/components/SearchBar";
 import styled from "styled-components";
+import Link from "next/link";
 
 export default function HomePage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [addedIds, setAddedIds] = useState([]);
+
+  useEffect(() => {
+    async function fetchSavedMedia() {
+      try {
+        const response = await fetch("/api/media");
+        const data = await response.json();
+        const ids = data.map((item) => Number(item.apiId));
+        setAddedIds(ids);
+      } catch (error) {
+        console.error("Failed to fetch saved media", error);
+      }
+    }
+    fetchSavedMedia();
+  }, []);
 
   async function handleSearch(query) {
     if (!query) {
@@ -25,10 +41,45 @@ export default function HomePage() {
       setLoading(false);
     }
   }
+  async function handleAdd(item) {
+    try {
+      const response = await fetch("/api/media", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          apiId: item.id.toString(),
+          title: item.title || item.name,
+          type: item.media_type === "tv" ? "series" : "movie",
+          imageUrl: item.poster_path
+            ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
+            : "",
+        }),
+      });
+
+      if (response.status === 409) {
+        setAddedIds((prev) => [...prev, item.id]);
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Failed to save");
+      }
+      setAddedIds((prev) => [...prev, item.id]);
+    } catch (error) {
+      console.error(error);
+      alert("Error saving media");
+    }
+  }
 
   return (
     <Main>
       <Heading>Media Tracker</Heading>
+
+      <Link href="/media">
+        <ViewButton>My List</ViewButton>
+      </Link>
 
       <SearchBar onSearch={handleSearch} />
 
@@ -51,6 +102,13 @@ export default function HomePage() {
             <Info>
               <Title>{item.title || item.name}</Title>
               <Type>{item.media_type}</Type>
+
+              <AddButton
+                onClick={() => handleAdd(item)}
+                disabled={addedIds.includes(item.id)}
+              >
+                {addedIds.includes(item.id) ? "Added" : "+ Add"}
+              </AddButton>
             </Info>
           </Card>
         ))}
@@ -67,7 +125,7 @@ const Main = styled.main`
 
 const Heading = styled.h1`
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 `;
 
 const Message = styled.p`
@@ -112,4 +170,33 @@ const Title = styled.p`
 const Type = styled.p`
   font-size: 0.8rem;
   color: #888;
+`;
+
+const AddButton = styled.button`
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.8rem;
+  transition: all 0.15s ease;
+  background: ${({ disabled }) => (disabled ? "#ccc" : "black")};
+  color: ${({ disabled }) => (disabled ? "#666" : "white")};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  &:hover {
+    background: ${({ disabled }) => (disabled ? "#ccc" : "#333")};
+  }
+`;
+
+const ViewButton = styled.button`
+  display: block;
+  margin: 0 auto 20px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #0070f3;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    background: #0059c1;
+  }
 `;
