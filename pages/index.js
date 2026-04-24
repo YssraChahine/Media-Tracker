@@ -11,11 +11,21 @@ const fetcher = (url) => fetch(url).then((response) => response.json());
 export default function HomePage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const { data: media = [], mutate } = useSWR("/api/media", fetcher);
+
+  const {
+    data: featured = [],
+    isLoading: featuredLoading,
+    error: featuredError,
+  } = useSWR("/api/featured", fetcher);
+
   const addedIds = media.map((item) => Number(item.apiId));
 
   async function handleSearch(query) {
+    setHasSearched(!!query);
+
     if (!query) {
       setResults([]);
       return;
@@ -68,25 +78,50 @@ export default function HomePage() {
       <Heading>Media Tracker</Heading>
 
       <Link href="/media">
-        <ViewButton>My List</ViewButton>
+        <ViewButton>View My List</ViewButton>
       </Link>
 
       <SearchBar onSearch={handleSearch} />
 
-      {loading && <Message>Loading...</Message>}
+      {loading && <Message>Searching...</Message>}
 
-      {!loading && results.length === 0 && <Message>No results found</Message>}
+      {!hasSearched && featuredLoading && (
+        <Message>Loading popular media...</Message>
+      )}
 
-      <Grid>
-        {results.map((item) => (
-          <MediaCard
-            key={item.id}
-            item={item}
-            onAdd={handleAdd}
-            isAdded={addedIds.includes(item.id)}
-          />
-        ))}
-      </Grid>
+      {featuredError && <Message>Error loading content.</Message>}
+
+      {!loading && hasSearched && results.length === 0 && (
+        <Message>No results found</Message>
+      )}
+
+      {results.length > 0 && (
+        <Grid>
+          {results.map((item) => (
+            <MediaCard
+              key={item.id}
+              item={item}
+              onAdd={handleAdd}
+              isAdded={addedIds.includes(item.id)}
+            />
+          ))}
+        </Grid>
+      )}
+      {!hasSearched && !featuredLoading && (
+        <>
+          <SubHeading>Popular right now</SubHeading>
+          <Grid>
+            {featured.map((item) => (
+              <MediaCard
+                key={item.id}
+                item={item}
+                onAdd={handleAdd}
+                isAdded={addedIds.includes(item.id)}
+              />
+            ))}
+          </Grid>
+        </>
+      )}
     </Main>
   );
 }
@@ -125,4 +160,11 @@ const ViewButton = styled.button`
   &:hover {
     background: #0059c1;
   }
+`;
+
+const SubHeading = styled.h2`
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #666;
 `;
