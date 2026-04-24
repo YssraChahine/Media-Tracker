@@ -11,6 +11,7 @@ const fetcher = (url) => fetch(url).then((response) => response.json());
 export default function HomePage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const { data: media = [], mutate } = useSWR("/api/media", fetcher);
 
@@ -23,6 +24,8 @@ export default function HomePage() {
   const addedIds = media.map((item) => Number(item.apiId));
 
   async function handleSearch(query) {
+    setHasSearched(!!query);
+
     if (!query) {
       setResults([]);
       return;
@@ -69,7 +72,6 @@ export default function HomePage() {
       alert("Error saving media");
     }
   }
-  const displayData = results.length > 0 ? results : featured;
 
   return (
     <Main>
@@ -83,26 +85,43 @@ export default function HomePage() {
 
       {loading && <Message>Searching...</Message>}
 
-      {!loading && featuredLoading && (
+      {!hasSearched && featuredLoading && (
         <Message>Loading popular media...</Message>
       )}
 
       {featuredError && <Message>Error loading content.</Message>}
 
-      {!loading && results.length === 0 && !featuredLoading && (
-        <SubHeading>Popular right now</SubHeading>
+      {!loading && hasSearched && results.length === 0 && (
+        <Message>No results found</Message>
       )}
 
-      <Grid>
-        {displayData.map((item) => (
-          <MediaCard
-            key={item.id}
-            item={item}
-            onAdd={handleAdd}
-            isAdded={addedIds.includes(item.id)}
-          />
-        ))}
-      </Grid>
+      {results.length > 0 && (
+        <Grid>
+          {results.map((item) => (
+            <MediaCard
+              key={item.id}
+              item={item}
+              onAdd={handleAdd}
+              isAdded={addedIds.includes(item.id)}
+            />
+          ))}
+        </Grid>
+      )}
+      {!hasSearched && !featuredLoading && (
+        <>
+          <SubHeading>Popular right now</SubHeading>
+          <Grid>
+            {featured.map((item) => (
+              <MediaCard
+                key={item.id}
+                item={item}
+                onAdd={handleAdd}
+                isAdded={addedIds.includes(item.id)}
+              />
+            ))}
+          </Grid>
+        </>
+      )}
     </Main>
   );
 }
