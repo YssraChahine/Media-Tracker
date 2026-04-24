@@ -134,7 +134,9 @@ const Main = styled.main`
 
 const Heading = styled.h1`
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+  letter-spacing: -1px;
 `;
 
 const Message = styled.p`
@@ -144,21 +146,24 @@ const Message = styled.p`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 28px;
 `;
 
 const ViewButton = styled.button`
   display: block;
-  margin: 0 auto 20px;
-  padding: 10px 16px;
-  border-radius: 8px;
+  margin: 0 auto 30px;
+  padding: 12px 20px;
+  border-radius: 999px;
   border: none;
-  background: #0070f3;
+  background: black;
   color: white;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s;
   &:hover {
-    background: #0059c1;
+    background: #222;
+    transform: translateY(-2px);
   }
 `;
 

@@ -7,9 +7,9 @@ export default function MyMediaCard({ item, onDelete }) {
   return (
     <>
       <Card>
-        <PosterWrapper>
-          <Poster src={item.imageUrl || "/placeholder.jpg"} alt={item.title} />
-        </PosterWrapper>
+        <Poster src={item.imageUrl || "/placeholder.jpg"} alt={item.title} />
+
+        <Overlay />
 
         <Content>
           <TopRow>
@@ -19,13 +19,15 @@ export default function MyMediaCard({ item, onDelete }) {
             </DeleteButton>
           </TopRow>
 
-          <Type>{item.type}</Type>
-
-          <Status>{item.status}</Status>
+          <Modal>
+            <Type>{item.type}</Type>
+            <Status>{item.status}</Status>
+          </Modal>
         </Content>
       </Card>
+
       {showConfirm && (
-        <Overlay>
+        <ModeOverlay>
           <Mode>
             <Text>Are you sure you want to delete this Media?</Text>
 
@@ -45,111 +47,149 @@ export default function MyMediaCard({ item, onDelete }) {
               </ConfirmButton>
             </ButtonRow>
           </Mode>
-        </Overlay>
+        </ModeOverlay>
       )}
     </>
   );
 }
 
 const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: 16px;
+  position: relative;
+  border-radius: 18px;
   overflow: hidden;
-  background: white;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  transition: transform 0.15s ease;
+  cursor: pointer;
+  transform: translateY(0);
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   }
-`;
-
-const PosterWrapper = styled.div`
-  width: 100%;
-  height: 280px;
+  &:hover img {
+    transform: scale(1.08);
+  }
 `;
 
 const Poster = styled.img`
   width: 100%;
-  height: 100%;
+  height: 280px;
   object-fit: cover;
+  transition: transform 0.3s ease;
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
 `;
 
 const Content = styled.div`
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  position: absolute;
+  bottom: 0;
+  padding: 14px;
+  width: 100%;
+  color: white;
 `;
 
 const TopRow = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+`;
+
+const Title = styled.h3`
+  font-size: 0.9rem;
+  max-width: 80%;
+`;
+
+const Modal = styled.div`
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
   align-items: center;
 `;
 
-const Title = styled.p`
-  font-weight: 600;
-  margin: 0;
-`;
-
-const Type = styled.p`
-  font-size: 0.8rem;
-  color: #888;
-  margin: 0;
+const Type = styled.span`
+  font-size: 0.75rem;
+  opacity: 0.7;
 `;
 
 const Status = styled.span`
-  margin-top: 6px;
-  padding: 4px 10px;
+  font-size: 0.7rem;
+  padding: 3px 8px;
   border-radius: 999px;
-  font-size: 0.75rem;
-  background: #eee;
-  align-self: flex-start;
+  background: ${({ $status }) =>
+    $status === "completed"
+      ? "#2ecc71"
+      : $status === "in progress"
+        ? "#f39c12"
+        : "#3498db"};
+  color: white;
 `;
 
 const DeleteButton = styled.button`
   border: none;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
-  font-size: 1rem;
+  opacity: 0;
+  transition: all 0.2s;
+  ${Card}:hover & {
+    opacity: 1;
+  }
   &:hover {
-    opacity: 0.6;
+    background: rgba(255, 77, 79, 0.9);
   }
 `;
 
-const Overlay = styled.div`
-  display: flex;
+const ModeOverlay = styled.div`
   position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
   justify-content: center;
   align-items: center;
-  inset: 0;
-  z-index: 999;
-  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
 `;
 
 const Mode = styled.div`
   background: white;
-  padding: 20px;
+  padding: 25px;
+  border-radius: 14px;
   width: 300px;
   text-align: center;
-  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.2s ease;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 `;
 
 const Text = styled.p`
   margin-bottom: 20px;
+  font-size: 0.95rem;
 `;
 
 const ButtonRow = styled.div`
   display: flex;
-  justify-content: center;
   gap: 10px;
+  justify-content: center;
 `;
 
 const CancelButton = styled.button`
   padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  border-radius: 8px;
+  border: 1px solid #ddd;
   background: white;
   cursor: pointer;
   &:hover {
@@ -159,7 +199,7 @@ const CancelButton = styled.button`
 
 const ConfirmButton = styled.button`
   padding: 8px 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   background: #ff4d4f;
   color: white;
