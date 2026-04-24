@@ -14,7 +14,7 @@ export default function MyMediaCard({ item, onDelete, mutate }) {
         body: JSON.stringify({ status: newStatus }),
       });
       if (!response.ok) throw new Error("Update failed.");
-      mutate();
+      mutate?.();
     } catch (error) {
       console.error(error);
     }
