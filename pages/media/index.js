@@ -45,10 +45,17 @@ export default function MediaPage() {
 
   return (
     <Main>
-      <BackButton />
+      <TopBar>
+        <BackButton />
+      </TopBar>
 
-      <Heading>My Media List</Heading>
-      {media.length === 0 && <Message>No media added yet</Message>}
+      <Heading>My Collection</Heading>
+      {media.length === 0 && (
+        <EmptyState>
+          <h3>No media added yet</h3>
+          <p>Start adding movies and series to your collection.</p>
+        </EmptyState>
+      )}
 
       <Grid>
         {media.map((item) => (
@@ -60,23 +67,46 @@ export default function MediaPage() {
 }
 
 const Main = styled.main`
-  max-width: 900px;
-  margin: 40px auto;
+  max-width: 1000px;
+  margin: 50px auto;
   padding: 20px;
+`;
+
+const TopBar = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 `;
 
 const Heading = styled.h1`
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  letter-spacing: -0.5px;
 `;
 
 const Message = styled.p`
   text-align: center;
   color: #666;
+  font-size: 0.95rem;
+`;
+
+const EmptyState = styled.div`
+  text-align: center;
+  margin-top: 60px;
+  color: #777;
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 26px;
 `;

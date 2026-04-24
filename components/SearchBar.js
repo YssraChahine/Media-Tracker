@@ -17,49 +17,71 @@ export default function SearchBar({ onSearch }) {
 
   return (
     <Wrapper>
-      <Input
-        type="text"
-        placeholder="Search movies or series..."
-        value={query}
-        onChange={handleChange}
-      />
+      <InputWrapper>
+        <Input
+          type="text"
+          placeholder="Search movies or series..."
+          value={query}
+          onChange={handleChange}
+        />
 
-      {query && (
-        <ClearButton type="button" onClick={handleClear}>
-          X
-        </ClearButton>
-      )}
+        {query && (
+          <ClearButton type="button" onClick={handleClear}>
+            X
+          </ClearButton>
+        )}
+      </InputWrapper>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+`;
+
+const InputWrapper = styled.div`
   position: relative;
-  margin-bottom: 20px;
+  width: 100%;
+  max-width: 500px;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  padding: 4px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  transition: all 0.2s;
+  &:focus-within {
+    transform: scale(1.02);
+    box-shadow:
+      0 15px 40px rgba(0, 0, 0, 0.12),
+      0 0 0 3px rgba(0, 112, 243, 0.15);
+  }
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 12px 40px 12px 12px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  font-size: 0.95rem;
-  &:focus {
-    outline: none;
-    border-color: #333;
-  }
+  padding: 14px 45px 14px 18px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0%.95rem;
 `;
 
 const ClearButton = styled.button`
   position: absolute;
-  right: 10px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   border: none;
   background: transparent;
-  font-size: 1.2rem;
+  font-size: 1rem;
   cursor: pointer;
+  opacity: 0.6;
   &:hover {
-    opacity: 0.6;
+    opacity: 1;
   }
 `;
