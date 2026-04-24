@@ -59,7 +59,12 @@ export default function MediaPage() {
 
       <Grid>
         {media.map((item) => (
-          <MyMediaCard key={item._id} item={item} onDelete={handleDelete} />
+          <MyMediaCard
+            key={item._id}
+            item={item}
+            onDelete={handleDelete}
+            mutate={mutate}
+          />
         ))}
       </Grid>
     </Main>
