@@ -1,8 +1,24 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-export default function MyMediaCard({ item, onDelete }) {
+export default function MyMediaCard({ item, onDelete, mutate }) {
   const [showConfirm, setShowConfirm] = useState(false);
+
+  async function handleStatusChange(newStatus) {
+    try {
+      const response = await fetch(`/api/media/${item._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) throw new Error("Update failed.");
+      mutate?.();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -21,7 +37,14 @@ export default function MyMediaCard({ item, onDelete }) {
 
           <Modal>
             <Type>{item.type}</Type>
-            <Status>{item.status}</Status>
+            <StatusSelect
+              value={item.status}
+              onChange={(event) => handleStatusChange(event.target.value)}
+            >
+              <option value="planned">Planned</option>
+              <option value="in progress">In progress</option>
+              <option value="completed">Completed</option>
+            </StatusSelect>
           </Modal>
         </Content>
       </Card>
@@ -114,17 +137,17 @@ const Type = styled.span`
   opacity: 0.7;
 `;
 
-const Status = styled.span`
-  font-size: 0.7rem;
-  padding: 3px 8px;
+const StatusSelect = styled.select`
+  padding: 3px 6px;
   border-radius: 999px;
-  background: ${({ $status }) =>
-    $status === "completed"
-      ? "#2ecc71"
-      : $status === "in progress"
-        ? "#f39c12"
-        : "#3498db"};
+  border: none;
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.2);
   color: white;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
 `;
 
 const DeleteButton = styled.button`

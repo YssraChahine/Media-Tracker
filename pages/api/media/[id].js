@@ -8,10 +8,14 @@ export default async function handler(request, response) {
 
   if (request.method === "PATCH") {
     try {
-      const updatedMedia = await Media.findByIdAndUpdate(id, request.body, {
-        new: true,
-        runValidators: true,
-      });
+      const { status } = request.body;
+      const updatedMedia = await Media.findByIdAndUpdate(
+        id,
+        { status },
+        {
+          new: true,
+        }
+      );
       if (!updatedMedia) {
         return response.status(404).json({ message: "Media not found" });
       }
