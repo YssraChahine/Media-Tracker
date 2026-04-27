@@ -122,8 +122,6 @@ export default function MediaDetails() {
   );
 }
 
-/* STYLES */
-
 const Main = styled.main`
   max-width: 900px;
   margin: 40px auto;
