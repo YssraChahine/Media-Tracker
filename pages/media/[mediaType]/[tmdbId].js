@@ -3,7 +3,7 @@ import useSWR from "swr";
 import styled from "styled-components";
 import Link from "next/link";
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
+const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function MediaDetails() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function MediaDetails() {
 
   async function handleAdd() {
     try {
-      const response = await fetch("/api/media", {
+      const NewResponse = await fetch("/api/media", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export default function MediaDetails() {
         }),
       });
 
-      if (!response.ok) throw new Error("Add failed");
+      if (!NewResponse.ok) throw new Error("Add failed");
 
       mutate();
     } catch (error) {
@@ -63,7 +63,7 @@ export default function MediaDetails() {
 
   async function handleStatusChange(newStatus) {
     try {
-      const response = await fetch(`/api/media/${data.userData._id}`, {
+      const StatusResponse = await fetch(`/api/media/${data.userData._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function MediaDetails() {
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!response.ok) throw new Error("Update failed");
+      if (!StatusResponse.ok) throw new Error("Update failed");
 
       mutate();
     } catch (error) {
@@ -106,7 +106,7 @@ export default function MediaDetails() {
             <Controls>
               <StatusSelect
                 value={data.userData.status}
-                onChange={(e) => handleStatusChange(e.target.value)}
+                onChange={(event) => handleStatusChange(event.target.value)}
               >
                 <option value="planned">Planned</option>
                 <option value="in progress">In progress</option>

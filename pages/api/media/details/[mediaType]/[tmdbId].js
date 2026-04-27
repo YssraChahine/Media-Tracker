@@ -1,21 +1,21 @@
 import dbConnect from "@/db/connect";
 import Media from "@/db/models/Media";
 
-export default async function handler(req, res) {
+export default async function handler(request, response) {
   await dbConnect();
 
-  const { mediaType, tmdbId } = req.query;
+  const { mediaType, tmdbId } = request.query;
 
   try {
-    const response = await fetch(
+    const MediaResponse = await fetch(
       `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_API_KEY}`
     );
 
-    if (!response.ok) {
-      return res.status(404).json({ error: "Not found in TMDB" });
+    if (!MediaResponse.ok) {
+      return response.status(404).json({ error: "Not found in TMDB" });
     }
 
-    const data = await response.json();
+    const data = await MediaResponse.json();
 
     const dbMedia = await Media.findOne({
       apiId: String(tmdbId),
@@ -34,9 +34,9 @@ export default async function handler(req, res) {
         : null,
     };
 
-    res.status(200).json(combined);
+    response.status(200).json(combined);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to load details" });
+    response.status(500).json({ error: "Failed to load details" });
   }
 }
