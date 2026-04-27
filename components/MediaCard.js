@@ -1,17 +1,22 @@
 import styled from "styled-components";
+import Link from "next/link";
 
 export default function MediaCard({ item, onAdd, isAdded }) {
   return (
     <Card>
-      <Poster
-        src={
-          item.poster_path
-            ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-            : "/placeholder.jpg"
-        }
-        alt={item.title || item.name}
-      />
-      <Overlay />
+      <Link href={`/media/${item.media_type}/${item.id}?from=home`}>
+        {" "}
+        <Poster
+          src={
+            item.poster_path
+              ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
+              : "/placeholder.jpg"
+          }
+          alt={item.title || item.name}
+        />
+        <Overlay />
+      </Link>
+
       <Content>
         <Title>{item.title || item.name}</Title>
         <Type>{item.media_type}</Type>
