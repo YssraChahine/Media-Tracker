@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import Link from "next/link";
 
 export default function MyMediaCard({ item, onDelete, mutate }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -23,14 +24,28 @@ export default function MyMediaCard({ item, onDelete, mutate }) {
   return (
     <>
       <Card>
-        <Poster src={item.imageUrl || "/placeholder.jpg"} alt={item.title} />
-
-        <Overlay />
+        <Link
+          href={`/media/${item.type === "series" ? "tv" : "movie"}/${item.apiId}?from=my-list`}
+        >
+          {" "}
+          <PosterWrapper>
+            <Poster
+              src={item.imageUrl || "/placeholder.jpg"}
+              alt={item.title}
+            />
+            <Overlay />
+          </PosterWrapper>
+        </Link>
 
         <Content>
           <TopRow>
             <Title>{item.title}</Title>
-            <DeleteButton type="button" onClick={() => setShowConfirm(true)}>
+            <DeleteButton
+              type="button"
+              onClick={() => {
+                setShowConfirm(true);
+              }}
+            >
               X
             </DeleteButton>
           </TopRow>
@@ -39,7 +54,9 @@ export default function MyMediaCard({ item, onDelete, mutate }) {
             <Type>{item.type}</Type>
             <StatusSelect
               value={item.status}
-              onChange={(event) => handleStatusChange(event.target.value)}
+              onChange={(event) => {
+                handleStatusChange(event.target.value);
+              }}
             >
               <option value="planned">Planned</option>
               <option value="in progress">In progress</option>
@@ -230,4 +247,8 @@ const ConfirmButton = styled.button`
   &:hover {
     background: #e03131;
   }
+`;
+const PosterWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
 `;
