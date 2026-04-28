@@ -123,8 +123,8 @@ export default function MediaDetails() {
 }
 
 const Main = styled.main`
-  max-width: 900px;
-  margin: 40px auto;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px;
 `;
 
@@ -133,6 +133,10 @@ const BackLink = styled(Link)`
   margin-bottom: 20px;
   text-decoration: none;
   color: #111;
+  font-size: 0.9rem;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Message = styled.p`
@@ -141,40 +145,65 @@ const Message = styled.p`
 
 const Hero = styled.div`
   display: flex;
-  gap: 30px;
+  flex-direction: column;
+  gap: 20px;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 `;
 
 const Poster = styled.img`
-  width: 300px;
-  border-radius: 12px;
+  width: 100%;
+  max-width: 320px;
+  border-radius: 14px;
+  align-self: center;
+  @media (min-width: 768px) {
+    width: 300px;
+    align-self: flex-start;
+  }
 `;
 
 const Info = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const Title = styled.h1`
+  font-size: 1.6rem;
   margin-bottom: 10px;
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 const Overview = styled.p`
   margin-top: 20px;
-  line-height: 1.5;
+  line-height: 1.6;
+  color: #444;
+  word-break: break-word;
 `;
 
 const AddButton = styled.button`
   margin: 10px 0;
-  padding: 10px;
+  padding: 10px 14px;
   border-radius: 8px;
   border: none;
   background: black;
   color: white;
   cursor: pointer;
+  width: fit-content;
+  &:hover {
+    background: #333;
+  }
 `;
 
 const Controls = styled.div`
   margin: 10px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 `;
 
 const StatusSelect = styled.select`
