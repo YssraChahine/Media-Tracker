@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import styled from "styled-components";
 import BackButton from "@/components/BackButton";
-import MyMediaCard from "@/components/MyMediaCard";
+import MediaList from "@/components/MediaList";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -57,16 +57,7 @@ export default function MediaPage() {
         </EmptyState>
       )}
 
-      <Grid>
-        {media.map((item) => (
-          <MyMediaCard
-            key={item._id}
-            item={item}
-            onDelete={handleDelete}
-            mutate={mutate}
-          />
-        ))}
-      </Grid>
+      <MediaList media={media} onDelete={handleDelete} mutate={mutate} />
     </Main>
   );
 }
@@ -108,10 +99,4 @@ const EmptyState = styled.div`
     font-size: 0.9rem;
     opacity: 0.8;
   }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 26px;
 `;
