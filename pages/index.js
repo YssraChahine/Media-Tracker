@@ -46,25 +46,28 @@ export default function HomePage() {
       setLoading(false);
     }
   }
-  async function handleAdd(item) {
+  async function handleToggle(item) {
     try {
-      const response = await fetch("/api/media", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          apiId: item.id.toString(),
-          title: item.title || item.name,
-          type: item.media_type === "tv" ? "series" : "movie",
-          imageUrl: item.poster_path
-            ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-            : "",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save");
+      const existing = media.find((media) => Number(media.apiId) === item.id);
+      if (!existing) {
+        const response = await fetch("/api/media", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            apiId: item.id.toString(),
+            title: item.title || item.name,
+            type: item.media_type === "tv" ? "series" : "movie",
+            imageUrl: item.poster_path
+              ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
+              : "",
+          }),
+        });
+        if (!response.ok) throw new Error("Add failed");
+      } else {
+        const RemoveResponse = await fetch(`/api/media/${existing._id}`, {
+          method: "DELETE",
+        });
+        if (!RemoveResponse.ok) throw new Error("Delete failed");
       }
       mutate();
     } catch (error) {
@@ -101,7 +104,7 @@ export default function HomePage() {
             <MediaCard
               key={item.id}
               item={item}
-              onAdd={handleAdd}
+              onToggle={handleToggle}
               isAdded={addedIds.includes(item.id)}
             />
           ))}
@@ -115,7 +118,7 @@ export default function HomePage() {
               <MediaCard
                 key={item.id}
                 item={item}
-                onAdd={handleAdd}
+                onToggle={handleToggle}
                 isAdded={addedIds.includes(item.id)}
               />
             ))}
