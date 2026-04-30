@@ -36,24 +36,30 @@ export default function MediaDetails() {
 
   const isSaved = !!data.userData;
 
-  async function handleAdd() {
+  async function handleToggle() {
     try {
-      const NewResponse = await fetch("/api/media", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          apiId: tmdbId,
-          title: data.title || data.name,
-          type: mediaType === "tv" ? "series" : "movie",
-          imageUrl: data.poster_path
-            ? `https://image.tmdb.org/t/p/w200${data.poster_path}`
-            : "",
-        }),
-      });
-
-      if (!NewResponse.ok) throw new Error("Add failed");
+      if (!isSaved) {
+        const newResponse = await fetch("/api/media", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            apiId: tmdbId,
+            title: data.title || data.name,
+            type: mediaType === "tv" ? "series" : "movie",
+            imageUrl: data.poster_path
+              ? `https://image.tmdb.org/t/p/w200${data.poster_path}`
+              : "",
+          }),
+        });
+        if (!newResponse.ok) throw new Error("Add failed");
+      } else {
+        const removeResponse = await fetch(`/api/media/${data.userData._id}`, {
+          method: "DELETE",
+        });
+        if (!removeResponse.ok) throw new Error("Delete failed");
+      }
 
       mutate();
     } catch (error) {
@@ -63,7 +69,7 @@ export default function MediaDetails() {
 
   async function handleStatusChange(newStatus) {
     try {
-      const StatusResponse = await fetch(`/api/media/${data.userData._id}`, {
+      const statusResponse = await fetch(`/api/media/${data.userData._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +77,7 @@ export default function MediaDetails() {
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!StatusResponse.ok) throw new Error("Update failed");
+      if (!statusResponse.ok) throw new Error("Update failed");
 
       mutate();
     } catch (error) {
@@ -98,9 +104,9 @@ export default function MediaDetails() {
         <Info>
           <Title>{data.title || data.name}</Title>
 
-          {!isSaved && (
-            <AddButton onClick={handleAdd}>+ Add to My List</AddButton>
-          )}
+          <ToggleButton onClick={handleToggle} $active={isSaved}>
+            {isSaved ? "✓ Added (Remove)" : "+ Add to My List"}
+          </ToggleButton>
 
           {isSaved && (
             <Controls>
@@ -185,17 +191,17 @@ const Overview = styled.p`
   word-break: break-word;
 `;
 
-const AddButton = styled.button`
+const ToggleButton = styled.button`
   margin: 10px 0;
   padding: 10px 14px;
   border-radius: 8px;
   border: none;
-  background: black;
+  background: ${({ $active }) => ($active ? "#cc2e2e" : "#111")};
   color: white;
   cursor: pointer;
-  width: fit-content;
+  transition: 0.2s;
   &:hover {
-    background: #333;
+    opacity: 0.9;
   }
 `;
 

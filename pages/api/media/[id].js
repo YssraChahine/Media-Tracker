@@ -34,7 +34,7 @@ export default async function handler(request, response) {
       return response.status(200).json({ message: "Media deleted" });
     } catch (error) {
       console.error(error);
-      return response.status(400).json({ error: error.message });
+      return response.status(400).json({ error: "Delete failed" });
     }
   }
   return response.status(405).json({ message: "Method not allowed" });
