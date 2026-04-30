@@ -1,8 +1,14 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import BookmarkButton from "./BookmarkButton";
 
-export default function MyMediaCard({ item, onDelete, mutate }) {
+export default function MyMediaCard({
+  item,
+  onDelete,
+  onToggleFavorite,
+  mutate,
+}) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   async function handleStatusChange(newStatus) {
@@ -34,6 +40,10 @@ export default function MyMediaCard({ item, onDelete, mutate }) {
               alt={item.title}
             />
             <Overlay />
+            <BookmarkButton
+              isFavorite={item.isFavorite}
+              onToggle={() => onToggleFavorite(item._id, item.isFavorite)}
+            />
           </PosterWrapper>
         </Link>
 
@@ -251,4 +261,8 @@ const ConfirmButton = styled.button`
 const PosterWrapper = styled.div`
   position: relative;
   cursor: pointer;
+  &:hover button {
+    opacity: 1;
+    transform: scale(1);
+  }
 `;

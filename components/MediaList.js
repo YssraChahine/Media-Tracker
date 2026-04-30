@@ -1,7 +1,7 @@
 import MyMediaCard from "./MyMediaCard";
 import styled from "styled-components";
 
-export default function MediaList({ media, onDelete, mutate }) {
+export default function MediaList({ media, onDelete, onToggleFavorite, mutate }) {
   if (media.length === 0) {
     return <Message>No media added yet</Message>;
   }
@@ -13,6 +13,7 @@ export default function MediaList({ media, onDelete, mutate }) {
           key={item._id}
           item={item}
           onDelete={onDelete}
+          onToggleFavorite={onToggleFavorite}
           mutate={mutate}
         />
       ))}
