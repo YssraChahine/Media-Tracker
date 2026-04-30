@@ -2,6 +2,8 @@ import useSWR from "swr";
 import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import MediaList from "@/components/MediaList";
+import Filter from "@/components/Filter";
+import { useState } from "react";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -12,6 +14,11 @@ export default function MediaPage() {
     isLoading,
     mutate,
   } = useSWR("/api/media", fetcher);
+
+  const [filters, setFilters] = useState({
+    status: "all",
+    favorites: false,
+  });
 
   async function handleToggleFavorite(id, currentState) {
     try {
@@ -46,6 +53,14 @@ export default function MediaPage() {
       console.error(error);
     }
   }
+
+  const filteredMedia = media.filter((item) => {
+    const matchesStatus =
+      filters.status === "all" || item.status === filters.status;
+    const matchesFavorites = !filters.favorites || item.isFavorite;
+    return matchesStatus && matchesFavorites;
+  });
+
   if (isLoading) {
     return (
       <Main>
@@ -70,6 +85,14 @@ export default function MediaPage() {
       </TopBar>
 
       <Heading>My Collection</Heading>
+      <SubText>Track your movies & series</SubText>
+      <Filter filters={filters} setFilters={setFilters} />
+      {filteredMedia.length === 0 && (
+        <EmptyState>
+          <h3>No matching media</h3>
+          <p>Try adjusting your filters.</p>
+        </EmptyState>
+      )}
       {media.length === 0 && (
         <EmptyState>
           <h3>No media added yet</h3>
@@ -78,7 +101,7 @@ export default function MediaPage() {
       )}
 
       <MediaList
-        media={media}
+        media={filteredMedia}
         onDelete={handleDelete}
         onToggleFavorite={handleToggleFavorite}
         mutate={mutate}
@@ -101,9 +124,16 @@ const TopBar = styled.div`
 
 const Heading = styled.h1`
   text-align: center;
-  font-size: 2.2rem;
-  margin-bottom: 30px;
+  font-size: 2.3rem;
+  margin-bottom: 10px;
   letter-spacing: -0.5px;
+`;
+
+const SubText = styled.p`
+  text-align: center;
+  color: #777;
+  margin-bottom: 25px;
+  font-size: 0.9rem;
 `;
 
 const Message = styled.p`

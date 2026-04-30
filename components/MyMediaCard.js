@@ -104,16 +104,19 @@ export default function MyMediaCard({
 }
 
 const Card = styled.div`
+  margin: auto;
   position: relative;
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
   transform: translateY(0);
-  transition: all 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
   }
   &:hover img {
     transform: scale(1.08);
@@ -124,19 +127,24 @@ const Poster = styled.img`
   width: 100%;
   height: 280px;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease;
 `;
 
 const Overlay = styled.div`
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
 `;
 
 const Content = styled.div`
   position: absolute;
   bottom: 0;
-  padding: 14px;
+  padding: 16px;
   width: 100%;
   color: white;
 `;
@@ -148,7 +156,9 @@ const TopRow = styled.div`
 `;
 
 const Title = styled.h3`
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
   max-width: 80%;
 `;
 
@@ -165,33 +175,40 @@ const Type = styled.span`
 `;
 
 const StatusSelect = styled.select`
-  padding: 3px 6px;
+  padding: 4px 10px;
   border-radius: 999px;
   border: none;
   font-size: 0.7rem;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   color: white;
+  backdrop-filter: blur(4px);
   cursor: pointer;
   &:focus {
     outline: none;
+  }
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
   }
 `;
 
 const DeleteButton = styled.button`
   border: none;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.45);
   color: white;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   opacity: 0;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  transform: scale(0.9);
   ${Card}:hover & {
     opacity: 1;
+    transform: scale(1);
   }
   &:hover {
     background: rgba(255, 77, 79, 0.9);
+    transform: scale(1.1);
   }
 `;
 
