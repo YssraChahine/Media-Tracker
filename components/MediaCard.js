@@ -24,8 +24,7 @@ export default function MediaCard({ item, onToggle, isAdded }) {
         <Type>{item.media_type}</Type>
 
         <AddButton
-          onClick={(e) => {
-            e.stopPropagation();
+          onClick={() => {
             onToggle(item);
           }}
           $active={isAdded}
@@ -101,8 +100,7 @@ const AddButton = styled.button`
   border-radius: 6px;
   border: none;
   font-size: 0.75rem;
-  background: ${({ $active }) =>
-    $active ? "#2ecc71" : "#0070f3"};
+  background: ${({ $active }) => ($active ? "#2ecc71" : "#0070f3")};
   color: white;
   cursor: pointer;
   transition: 0.2s;

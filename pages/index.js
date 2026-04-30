@@ -48,7 +48,7 @@ export default function HomePage() {
   }
   async function handleToggle(item) {
     try {
-      const existing = media.find((media) => Number(media.apiId) === item.id);
+      const existing = media.find((entry) => Number(entry.apiId) === item.id);
       if (!existing) {
         const response = await fetch("/api/media", {
           method: "POST",
@@ -64,10 +64,10 @@ export default function HomePage() {
         });
         if (!response.ok) throw new Error("Add failed");
       } else {
-        const RemoveResponse = await fetch(`/api/media/${existing._id}`, {
+        const removeResponse = await fetch(`/api/media/${existing._id}`, {
           method: "DELETE",
         });
-        if (!RemoveResponse.ok) throw new Error("Delete failed");
+        if (!removeResponse.ok) throw new Error("Delete failed");
       }
       mutate();
     } catch (error) {

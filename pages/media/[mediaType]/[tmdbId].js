@@ -39,7 +39,7 @@ export default function MediaDetails() {
   async function handleToggle() {
     try {
       if (!isSaved) {
-        const NewResponse = await fetch("/api/media", {
+        const newResponse = await fetch("/api/media", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -53,12 +53,12 @@ export default function MediaDetails() {
               : "",
           }),
         });
-        if (!NewResponse.ok) throw new Error("Add failed");
+        if (!newResponse.ok) throw new Error("Add failed");
       } else {
-        const RemoveResponse = await fetch(`/api/media/${data.userData._id}`, {
+        const removeResponse = await fetch(`/api/media/${data.userData._id}`, {
           method: "DELETE",
         });
-        if (!RemoveResponse.ok) throw new Error("Delete failed");
+        if (!removeResponse.ok) throw new Error("Delete failed");
       }
 
       mutate();
@@ -69,7 +69,7 @@ export default function MediaDetails() {
 
   async function handleStatusChange(newStatus) {
     try {
-      const StatusResponse = await fetch(`/api/media/${data.userData._id}`, {
+      const statusResponse = await fetch(`/api/media/${data.userData._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export default function MediaDetails() {
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!StatusResponse.ok) throw new Error("Update failed");
+      if (!statusResponse.ok) throw new Error("Update failed");
 
       mutate();
     } catch (error) {

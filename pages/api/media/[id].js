@@ -27,9 +27,13 @@ export default async function handler(request, response) {
   }
   if (request.method === "DELETE") {
     try {
-      await Media.findByIdAndDelete(id);
-      return response.status(200).json({ message: "Deleted" });
+      const deletedMedia = await Media.findByIdAndDelete(id);
+      if (!deletedMedia) {
+        return response.status(404).json({ message: "Media not found" });
+      }
+      return response.status(200).json({ message: "Media deleted" });
     } catch (error) {
+      console.error(error);
       return response.status(400).json({ error: "Delete failed" });
     }
   }
