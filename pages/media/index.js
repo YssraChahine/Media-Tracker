@@ -13,6 +13,26 @@ export default function MediaPage() {
     mutate,
   } = useSWR("/api/media", fetcher);
 
+  async function handleToggleFavorite(id, currentState) {
+    try {
+      const response = await fetch(`/api/media/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isFavorite: !currentState,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Favorite update failed");
+      }
+      mutate();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function handleDelete(id) {
     try {
       const response = await fetch(`/api/media/${id}`, {
@@ -57,7 +77,12 @@ export default function MediaPage() {
         </EmptyState>
       )}
 
-      <MediaList media={media} onDelete={handleDelete} mutate={mutate} />
+      <MediaList
+        media={media}
+        onDelete={handleDelete}
+        onToggleFavorite={handleToggleFavorite}
+        mutate={mutate}
+      />
     </Main>
   );
 }

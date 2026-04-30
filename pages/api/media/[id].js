@@ -8,10 +8,13 @@ export default async function handler(request, response) {
 
   if (request.method === "PATCH") {
     try {
-      const { status } = request.body;
+      const { status, isFavorite } = request.body;
       const updatedMedia = await Media.findByIdAndUpdate(
         id,
-        { status },
+        {
+          ...(status && { status }),
+          ...(typeof isFavorite === "boolean" && { isFavorite }),
+        },
         {
           new: true,
         }
