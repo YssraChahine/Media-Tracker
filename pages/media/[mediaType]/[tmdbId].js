@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import styled from "styled-components";
 import Link from "next/link";
+import CommentForm from "@/components/CommentForm";
+import CommentsList from "@/components/CommentsList";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -11,6 +13,11 @@ export default function MediaDetails() {
 
   const { data, error, isLoading, mutate } = useSWR(
     mediaType && tmdbId ? `/api/media/details/${mediaType}/${tmdbId}` : null,
+    fetcher
+  );
+
+  const { data: comments = [], mutate: mutateComments } = useSWR(
+    tmdbId ? `/api/media/${tmdbId}/comments` : null,
     fetcher
   );
 
@@ -39,11 +46,9 @@ export default function MediaDetails() {
   async function handleToggle() {
     try {
       if (!isSaved) {
-        const newResponse = await fetch("/api/media", {
+        const toggleResponse = await fetch("/api/media", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             apiId: tmdbId,
             title: data.title || data.name,
@@ -53,12 +58,14 @@ export default function MediaDetails() {
               : "",
           }),
         });
-        if (!newResponse.ok) throw new Error("Add failed");
+
+        if (!toggleResponse.ok) throw new Error("Add failed");
       } else {
-        const removeResponse = await fetch(`/api/media/${data.userData._id}`, {
+        const newResponse = await fetch(`/api/media/${data.userData._id}`, {
           method: "DELETE",
         });
-        if (!removeResponse.ok) throw new Error("Delete failed");
+
+        if (!newResponse.ok) throw new Error("Delete failed");
       }
 
       mutate();
@@ -71,9 +78,7 @@ export default function MediaDetails() {
     try {
       const statusResponse = await fetch(`/api/media/${data.userData._id}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
 
@@ -83,6 +88,47 @@ export default function MediaDetails() {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async function handleAdd(text) {
+    await fetch(`/api/media/${tmdbId}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    mutateComments();
+  }
+
+  async function handleEdit(id, text) {
+    await fetch(`/api/media/${tmdbId}/comments/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    mutateComments();
+  }
+
+  async function handleDeleteComment(id) {
+    await fetch(`/api/media/${tmdbId}/comments/${id}`, {
+      method: "DELETE",
+    });
+    mutateComments();
+  }
+
+  async function handleLike(id) {
+    const likeResponse = await fetch(`/api/media/${tmdbId}/comments/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "like" }),
+    });
+
+    if (!likeResponse.ok) {
+      const error = await response.json();
+      console.error("LIKE ERROR:", error);
+      return;
+    }
+
+    mutateComments();
   }
 
   return (
@@ -124,6 +170,21 @@ export default function MediaDetails() {
           <Overview>{data.overview}</Overview>
         </Info>
       </Hero>
+
+      {isSaved && (
+        <CommentsSection>
+          <h2>Comments</h2>
+
+          <CommentForm onAdd={handleAdd} />
+
+          <CommentsList
+            comments={comments}
+            onEdit={handleEdit}
+            onDelete={handleDeleteComment}
+            onLike={handleLike}
+          />
+        </CommentsSection>
+      )}
     </Main>
   );
 }
@@ -215,4 +276,8 @@ const Controls = styled.div`
 const StatusSelect = styled.select`
   padding: 6px 10px;
   border-radius: 6px;
+`;
+
+const CommentsSection = styled.div`
+  margin-top: 40px;
 `;
