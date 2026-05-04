@@ -123,7 +123,7 @@ export default function MediaDetails() {
     });
 
     if (!likeResponse.ok) {
-      const error = await response.json();
+      const error = await likeResponse.json();
       console.error("LIKE ERROR:", error);
       return;
     }

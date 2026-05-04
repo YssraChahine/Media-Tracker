@@ -7,19 +7,8 @@ export default async function handler(request, response) {
   const { id } = request.query;
 
   let media = await Media.findOne({ apiId: String(id) });
-
-  if (!media) {
-    if (request.method === "GET") {
-      return response.status(200).json([]);
-    }
-    if (request.method === "POST") {
-      media = await Media.create({
-        apiId: String(id),
-        title: "",
-        type: "movie",
-        comments: [],
-      });
-    }
+   if (!media) {
+    return response.status(404).json({ message: "Media not found" });
   }
   if (request.method === "GET") {
     return response.status(200).json(media.comments || []);
