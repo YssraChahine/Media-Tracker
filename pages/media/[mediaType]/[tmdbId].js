@@ -218,9 +218,13 @@ export default function MediaDetails() {
 }
 
 const Main = styled.main`
+  width: 100%;
   max-width: 1100px;
-  margin: auto;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 16px;
+  @media (min-width: 768px) {
+    padding: 30px;
+  }
 `;
 
 const BackLink = styled(Link)`
@@ -240,22 +244,37 @@ const Message = styled.p`
 
 const Hero = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 20px;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 40px;
+  }
 `;
 
 const Poster = styled.img`
-  width: 300px;
-  border-radius: 8px;
+  width: 100%;
+  max-width: 260px;
+  border-radius: 10px;
+  margin: 0 auto;
+  @media (min-width: 768px) {
+    width: 300px;
+    margin: 0;
+  }
 `;
 
 const Info = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  gap: 12px;
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  @media (min-width: 768px) {
+    font-size: 2.2rem;
+  }
 `;
 
 const Overview = styled.p`
@@ -294,7 +313,13 @@ const CommentsSection = styled.div`
 
 const MetaRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
+  @media (min-width: 600px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
 
 const Genres = styled.div`

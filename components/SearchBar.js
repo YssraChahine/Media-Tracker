@@ -49,18 +49,11 @@ const InputWrapper = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 14px 45px 14px 16px;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  background: #2a2a2a;
-  color: white;
-  font-size: 0.95rem;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 1rem;
   &::placeholder {
     color: #888;
-  }
-  &:focus {
-    background: #333;
   }
 `;
 

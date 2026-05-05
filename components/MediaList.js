@@ -28,8 +28,14 @@ export default function MediaList({
 
 const Grid = styled.div`
   display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 `;
 
 const Message = styled.p`

@@ -49,8 +49,13 @@ export default function Filter({ filters, setFilters }) {
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  @media (min-width: 768px) {
+    justify-content: space-between;
+  }
 `;
 
 const StatusGroup = styled.div`
