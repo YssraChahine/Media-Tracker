@@ -9,21 +9,17 @@ import GenreTag from "@/components/GenreTag";
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function MediaDetails() {
-  function formatDate(dateString) {
-    if (!dateString) return "Unknown";
-
-    try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    } catch {
-      return "Unknown";
-    }
-  }
   const router = useRouter();
   const { mediaType, tmdbId, from } = router.query;
+
+  function formatDate(dateString) {
+    if (!dateString) return "Unknown";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
 
   const { data, error, isLoading, mutate } = useSWR(
     mediaType && tmdbId ? `/api/media/details/${mediaType}/${tmdbId}` : null,
@@ -60,7 +56,7 @@ export default function MediaDetails() {
   async function handleToggle() {
     try {
       if (!isSaved) {
-        const toggleResponse = await fetch("/api/media", {
+        await fetch("/api/media", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -72,36 +68,24 @@ export default function MediaDetails() {
               : "",
           }),
         });
-
-        if (!toggleResponse.ok) throw new Error("Add failed");
       } else {
-        const newResponse = await fetch(`/api/media/${data.userData._id}`, {
+        await fetch(`/api/media/${data.userData._id}`, {
           method: "DELETE",
         });
-
-        if (!newResponse.ok) throw new Error("Delete failed");
       }
-
       mutate();
     } catch (error) {
       console.error(error);
     }
   }
 
-  async function handleStatusChange(newStatus) {
-    try {
-      const statusResponse = await fetch(`/api/media/${data.userData._id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (!statusResponse.ok) throw new Error("Update failed");
-
-      mutate();
-    } catch (error) {
-      console.error(error);
-    }
+  async function handleStatusChange(status) {
+    await fetch(`/api/media/${data.userData._id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    mutate();
   }
 
   async function handleAdd(text) {
@@ -122,7 +106,7 @@ export default function MediaDetails() {
     mutateComments();
   }
 
-  async function handleDeleteComment(id) {
+  async function handleDelete(id) {
     await fetch(`/api/media/${tmdbId}/comments/${id}`, {
       method: "DELETE",
     });
@@ -130,39 +114,34 @@ export default function MediaDetails() {
   }
 
   async function handleLike(id) {
-    const likeResponse = await fetch(`/api/media/${tmdbId}/comments/${id}`, {
+    await fetch(`/api/media/${tmdbId}/comments/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "like" }),
     });
-
-    if (!likeResponse.ok) {
-      const error = await likeResponse.json();
-      console.error("LIKE ERROR:", error);
-      return;
-    }
-
     mutateComments();
   }
 
   return (
     <Main>
-      <BackLink href={backHref}>
-        {from === "my-list" ? "← Back to My List" : "← Back to Home"}
-      </BackLink>
+      <BackLink href={backHref}>← Back</BackLink>
 
       <Hero>
-        <Poster
+        <Backdrop
           src={
-            data.poster_path
-              ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
-              : "/placeholder.jpg"
+            data?.backdrop_path
+              ? `https://image.tmdb.org/t/p/original${data.backdrop_path}`
+              : data?.poster_path
+                ? `https://image.tmdb.org/t/p/original${data.poster_path}`
+                : "/placeholder.jpg"
           }
-          alt={data.title || data.name}
         />
 
-        <Info>
+        <Overlay />
+
+        <HeroContent>
           <Title>{data.title || data.name}</Title>
+
           <MetaRow>
             <Genres>
               {data.genres?.length > 0 ? (
@@ -170,7 +149,7 @@ export default function MediaDetails() {
                   <GenreTag key={genre.id} label={genre.name} />
                 ))
               ) : (
-                <Fallback>No genres available</Fallback>
+                <Fallback>No genres</Fallback>
               )}
             </Genres>
 
@@ -178,12 +157,13 @@ export default function MediaDetails() {
               {formatDate(data.release_date || data.first_air_date)}
             </Release>
           </MetaRow>
-          <ToggleButton onClick={handleToggle} $active={isSaved}>
-            {isSaved ? "✓ Added (Remove)" : "+ Add to My List"}
-          </ToggleButton>
 
-          {isSaved && (
-            <Controls>
+          <ButtonRow>
+            <PrimaryButton onClick={handleToggle} $active={isSaved}>
+              {isSaved ? "✓ Added" : "+ My List"}
+            </PrimaryButton>
+
+            {isSaved && (
               <StatusSelect
                 value={data.userData.status}
                 onChange={(event) => handleStatusChange(event.target.value)}
@@ -192,26 +172,24 @@ export default function MediaDetails() {
                 <option value="in progress">In progress</option>
                 <option value="completed">Completed</option>
               </StatusSelect>
-            </Controls>
-          )}
+            )}
+          </ButtonRow>
 
           <Overview>{data.overview}</Overview>
-        </Info>
+        </HeroContent>
       </Hero>
 
       {isSaved && (
-        <CommentsSection>
+        <ContentSection>
           <h2>Comments</h2>
-
           <CommentForm onAdd={handleAdd} />
-
           <CommentsList
             comments={comments}
             onEdit={handleEdit}
-            onDelete={handleDeleteComment}
+            onDelete={handleDelete}
             onLike={handleLike}
           />
-        </CommentsSection>
+        </ContentSection>
       )}
     </Main>
   );
@@ -219,23 +197,12 @@ export default function MediaDetails() {
 
 const Main = styled.main`
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 16px;
-  @media (min-width: 768px) {
-    padding: 30px;
-  }
 `;
 
 const BackLink = styled(Link)`
   display: inline-block;
-  margin-bottom: 20px;
-  text-decoration: none;
-  color: #fff;
-  font-size: 0.9rem;
-  &:hover {
-    text-decoration: underline;
-  }
+  margin: 15px;
+  color: #aaa;
 `;
 
 const Message = styled.p`
@@ -243,96 +210,86 @@ const Message = styled.p`
 `;
 
 const Hero = styled.div`
+  position: relative;
+  height: 75vh;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-    gap: 40px;
-  }
+  align-items: flex-end;
 `;
 
-const Poster = styled.img`
+const Backdrop = styled.img`
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 260px;
-  border-radius: 10px;
-  margin: 0 auto;
-  @media (min-width: 768px) {
-    width: 300px;
-    margin: 0;
-  }
+  height: 100%;
+  object-fit: cover;
 `;
 
-const Info = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+const Overlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(20, 20, 20, 1),
+    rgba(20, 20, 20, 0.5),
+    transparent
+  );
+`;
+
+const HeroContent = styled.div`
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  max-width: 600px;
 `;
 
 const Title = styled.h1`
-  font-size: 1.5rem;
-  line-height: 1.2;
-  @media (min-width: 768px) {
-    font-size: 2.2rem;
-  }
-`;
-
-const Overview = styled.p`
-  color: #ccc;
-`;
-
-const ToggleButton = styled.button`
-  margin: 10px 0;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: none;
-  background: ${({ $active }) => ($active ? "#cc2e2e" : "#525050")};
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-  &:hover {
-    opacity: 0.9;
-  }
-`;
-
-const Controls = styled.div`
-  margin: 10px 0;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-`;
-
-const StatusSelect = styled.select`
-  padding: 6px 10px;
-  border-radius: 6px;
-`;
-
-const CommentsSection = styled.div`
-  margin-top: 40px;
+  font-size: 2rem;
 `;
 
 const MetaRow = styled.div`
+  margin: 10px 0;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  @media (min-width: 600px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
+  justify-content: space-between;
 `;
 
 const Genres = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
+  flex-wrap: wrap;
 `;
 
 const Release = styled.span`
-  color: #aaa;
+  color: #ccc;
 `;
 
 const Fallback = styled.span`
-  font-size: 0.8rem;
   color: #777;
+`;
+
+const ButtonRow = styled.div`
+  margin: 15px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+const PrimaryButton = styled.button`
+  background: ${({ $active }) => ($active ? "#e50914" : "white")};
+  color: ${({ $active }) => ($active ? "white" : "black")};
+  border: none;
+  padding: 10px 18px;
+  cursor: pointer;
+`;
+
+const StatusSelect = styled.select`
+  padding: 8px;
+`;
+
+const Overview = styled.p`
+  margin-top: 10px;
+  color: #ddd;
+`;
+
+const ContentSection = styled.div`
+  padding: 20px;
 `;
