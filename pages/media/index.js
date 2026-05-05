@@ -15,6 +15,8 @@ export default function MediaPage() {
     mutate,
   } = useSWR("/api/media", fetcher);
 
+  const [search, setSearch] = useState("");
+
   const [filters, setFilters] = useState({
     status: "all",
     favorites: false,
@@ -57,8 +59,14 @@ export default function MediaPage() {
   const filteredMedia = media.filter((item) => {
     const matchesStatus =
       filters.status === "all" || item.status === filters.status;
+
     const matchesFavorites = !filters.favorites || item.isFavorite;
-    return matchesStatus && matchesFavorites;
+
+    const matchesSearch = item.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    return matchesStatus && matchesFavorites && matchesSearch;
   });
 
   if (isLoading) {
@@ -86,13 +94,24 @@ export default function MediaPage() {
 
       <Heading>My Collection</Heading>
       <SubText>Track your movies & series</SubText>
+
+      <SearchWrapper>
+        <SearchInput
+          type="text"
+          placeholder="Search in your list..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+      </SearchWrapper>
+
       <Filter filters={filters} setFilters={setFilters} />
-      {filteredMedia.length === 0 && (
+      {filteredMedia.length === 0 && search && (
         <EmptyState>
-          <h3>No matching media</h3>
-          <p>Try adjusting your filters.</p>
+          <h3>No results found</h3>
+          <p>Try another search.</p>
         </EmptyState>
       )}
+
       {media.length === 0 && (
         <EmptyState>
           <h3>No media added yet</h3>
@@ -153,5 +172,24 @@ const EmptyState = styled.div`
   p {
     font-size: 0.9rem;
     opacity: 0.8;
+  }
+`;
+
+const SearchWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  max-width: 500px;
+  padding: 12px;
+  border-radius: 4px;
+  border: none;
+  background: #2a2a2a;
+  color: white;
+  &::placeholder {
+    color: #888;
   }
 `;
