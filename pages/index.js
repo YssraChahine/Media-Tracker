@@ -130,7 +130,7 @@ export default function HomePage() {
 }
 
 const Main = styled.main`
-  max-width: 900px;
+  max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
 `;
@@ -138,13 +138,11 @@ const Main = styled.main`
 const Heading = styled.h1`
   text-align: center;
   margin-bottom: 30px;
-  font-size: 2.2rem;
-  letter-spacing: -1px;
 `;
 
 const Message = styled.p`
   text-align: center;
-  color: #666;
+  color: #888;
 `;
 
 const Grid = styled.div`
@@ -171,8 +169,5 @@ const ViewButton = styled.button`
 `;
 
 const SubHeading = styled.h2`
-  text-align: center;
-  font-size: 1rem;
-  margin-bottom: 20px;
-  color: #666;
+  margin: 30px 0 10px;
 `;

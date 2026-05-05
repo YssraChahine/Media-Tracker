@@ -49,11 +49,13 @@ export default function Filter({ filters, setFilters }) {
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 25px;
   flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  @media (min-width: 768px) {
+    justify-content: space-between;
+  }
 `;
 
 const StatusGroup = styled.div`
@@ -63,18 +65,11 @@ const StatusGroup = styled.div`
 `;
 
 const StatusButton = styled.button`
-  padding: 6px 14px;
-  border-radius: 999px;
+  background: ${({ $active }) => ($active ? "#e50914" : "#222")};
+  color: white;
   border: none;
-  font-size: 0.8rem;
+  padding: 6px 12px;
   cursor: pointer;
-  background: ${({ $active }) => ($active ? "#111" : "rgba(0,0,0,0.05)")};
-  color: ${({ $active }) => ($active ? "white" : "#333")};
-  transition: all 0.2s ease;
-  &:hover {
-    transform: translateY(-1px);
-    background: ${({ $active }) => ($active ? "#111" : "rgba(0,0,0,0.1)")};
-  }
 `;
 
 const RightSide = styled.div`
@@ -83,29 +78,15 @@ const RightSide = styled.div`
 `;
 
 const FavButton = styled.button`
-  padding: 6px 14px;
-  border-radius: 999px;
+  background: ${({ $active }) => ($active ? "#e50914" : "#222")};
+  color: white;
   border: none;
-  font-size: 0.8rem;
-  cursor: pointer;
-  background: ${({ $active }) => ($active ? "#ff4d4f" : "rgba(255,77,79,0.1)")};
-  color: ${({ $active }) => ($active ? "white" : "#ff4d4f")};
-  transition: all 0.2s ease;
-  &:hover {
-    transform: translateY(-1px);
-    background: ${({ $active }) =>
-      $active ? "#e03131" : "rgba(255,77,79,0.2)"};
-  }
+  padding: 6px 12px;
 `;
 
 const ResetButton = styled.button`
-  padding: 6px 12px;
-  border-radius: 999px;
+  background: #333;
+  color: white;
   border: none;
-  font-size: 0.8rem;
-  background: rgba(0, 0, 0, 0.06);
-  cursor: pointer;
-  &:hover {
-    background: rgba(0, 0, 0, 0.12);
-  }
+  padding: 6px 12px;
 `;

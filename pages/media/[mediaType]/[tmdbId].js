@@ -218,16 +218,20 @@ export default function MediaDetails() {
 }
 
 const Main = styled.main`
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
+  @media (min-width: 768px) {
+    padding: 30px;
+  }
 `;
 
 const BackLink = styled(Link)`
   display: inline-block;
   margin-bottom: 20px;
   text-decoration: none;
-  color: #111;
+  color: #fff;
   font-size: 0.9rem;
   &:hover {
     text-decoration: underline;
@@ -244,40 +248,37 @@ const Hero = styled.div`
   gap: 20px;
   @media (min-width: 768px) {
     flex-direction: row;
-    align-items: flex-start;
+    gap: 40px;
   }
 `;
 
 const Poster = styled.img`
   width: 100%;
-  max-width: 320px;
-  border-radius: 14px;
-  align-self: center;
+  max-width: 260px;
+  border-radius: 10px;
+  margin: 0 auto;
   @media (min-width: 768px) {
     width: 300px;
-    align-self: flex-start;
+    margin: 0;
   }
 `;
 
 const Info = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  gap: 12px;
 `;
 
 const Title = styled.h1`
-  font-size: 1.6rem;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  line-height: 1.2;
   @media (min-width: 768px) {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
 `;
 
 const Overview = styled.p`
-  margin-top: 20px;
-  line-height: 1.6;
-  color: #444;
-  word-break: break-word;
+  color: #ccc;
 `;
 
 const ToggleButton = styled.button`
@@ -285,7 +286,7 @@ const ToggleButton = styled.button`
   padding: 10px 14px;
   border-radius: 8px;
   border: none;
-  background: ${({ $active }) => ($active ? "#cc2e2e" : "#111")};
+  background: ${({ $active }) => ($active ? "#cc2e2e" : "#525050")};
   color: white;
   cursor: pointer;
   transition: 0.2s;
@@ -311,10 +312,9 @@ const CommentsSection = styled.div`
 `;
 
 const MetaRow = styled.div`
-  margin: 10px 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   @media (min-width: 600px) {
     flex-direction: row;
     justify-content: space-between;
@@ -329,8 +329,7 @@ const Genres = styled.div`
 `;
 
 const Release = styled.span`
-  font-size: 0.85rem;
-  color: #ccc;
+  color: #aaa;
 `;
 
 const Fallback = styled.span`

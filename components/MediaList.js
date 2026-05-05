@@ -1,7 +1,12 @@
 import MyMediaCard from "./MyMediaCard";
 import styled from "styled-components";
 
-export default function MediaList({ media, onDelete, onToggleFavorite, mutate }) {
+export default function MediaList({
+  media,
+  onDelete,
+  onToggleFavorite,
+  mutate,
+}) {
   if (media.length === 0) {
     return <Message>No media added yet</Message>;
   }
@@ -24,7 +29,13 @@ export default function MediaList({ media, onDelete, onToggleFavorite, mutate })
 const Grid = styled.div`
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 `;
 
 const Message = styled.p`
