@@ -4,10 +4,24 @@ import styled from "styled-components";
 import Link from "next/link";
 import CommentForm from "@/components/CommentForm";
 import CommentsList from "@/components/CommentsList";
+import GenreTag from "@/components/GenreTag";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function MediaDetails() {
+  function formatDate(dateString) {
+    if (!dateString) return "Unknown";
+
+    try {
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return "Unknown";
+    }
+  }
   const router = useRouter();
   const { mediaType, tmdbId, from } = router.query;
 
@@ -149,7 +163,21 @@ export default function MediaDetails() {
 
         <Info>
           <Title>{data.title || data.name}</Title>
+          <MetaRow>
+            <Genres>
+              {data.genres?.length > 0 ? (
+                data.genres.map((genre) => (
+                  <GenreTag key={genre.id} label={genre.name} />
+                ))
+              ) : (
+                <Fallback>No genres available</Fallback>
+              )}
+            </Genres>
 
+            <Release>
+              {formatDate(data.release_date || data.first_air_date)}
+            </Release>
+          </MetaRow>
           <ToggleButton onClick={handleToggle} $active={isSaved}>
             {isSaved ? "✓ Added (Remove)" : "+ Add to My List"}
           </ToggleButton>
@@ -280,4 +308,32 @@ const StatusSelect = styled.select`
 
 const CommentsSection = styled.div`
   margin-top: 40px;
+`;
+
+const MetaRow = styled.div`
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  @media (min-width: 600px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+const Genres = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+`;
+
+const Release = styled.span`
+  font-size: 0.85rem;
+  color: #ccc;
+`;
+
+const Fallback = styled.span`
+  font-size: 0.8rem;
+  color: #777;
 `;
