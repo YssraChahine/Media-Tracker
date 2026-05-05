@@ -104,19 +104,13 @@ export default function MyMediaCard({
 }
 
 const Card = styled.div`
-  margin: auto;
   position: relative;
-  border-radius: 18px;
+  border-radius: 6px;
   overflow: hidden;
-  cursor: pointer;
-  transform: translateY(0);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
   &:hover {
-    transform: translateY(-6px) scale(1.015);
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+    transform: scale(1.08);
+    z-index: 10;
   }
   &:hover img {
     transform: scale(1.08);
@@ -133,18 +127,13 @@ const Poster = styled.img`
 const Overlay = styled.div`
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.85),
-    rgba(0, 0, 0, 0.4),
-    transparent
-  );
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
 `;
 
 const Content = styled.div`
   position: absolute;
   bottom: 0;
-  padding: 16px;
+  padding: 12px;
   width: 100%;
   color: white;
 `;
@@ -156,10 +145,7 @@ const TopRow = styled.div`
 `;
 
 const Title = styled.h3`
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.2;
-  max-width: 80%;
+  font-size: 0.9rem;
 `;
 
 const Modal = styled.div`
@@ -170,25 +156,15 @@ const Modal = styled.div`
 `;
 
 const Type = styled.span`
-  font-size: 0.75rem;
-  opacity: 0.7;
+  font-size: 0.7rem;
+  color: #aaa;
 `;
 
 const StatusSelect = styled.select`
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: none;
-  font-size: 0.7rem;
-  background: rgba(255, 255, 255, 0.15);
+  background: #222;
   color: white;
-  backdrop-filter: blur(4px);
-  cursor: pointer;
-  &:focus {
-    outline: none;
-  }
-  &:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
+  border: none;
+  padding: 4px 6px;
 `;
 
 const DeleteButton = styled.button`
@@ -199,17 +175,6 @@ const DeleteButton = styled.button`
   width: 30px;
   height: 30px;
   cursor: pointer;
-  opacity: 0;
-  transition: all 0.2s ease;
-  transform: scale(0.9);
-  ${Card}:hover & {
-    opacity: 1;
-    transform: scale(1);
-  }
-  &:hover {
-    background: rgba(255, 77, 79, 0.9);
-    transform: scale(1.1);
-  }
 `;
 
 const ModeOverlay = styled.div`
@@ -245,6 +210,7 @@ const Mode = styled.div`
 const Text = styled.p`
   margin-bottom: 20px;
   font-size: 0.95rem;
+  color: black;
 `;
 
 const ButtonRow = styled.div`

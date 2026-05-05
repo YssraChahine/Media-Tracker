@@ -37,51 +37,43 @@ export default function SearchBar({ onSearch }) {
 
 const Wrapper = styled.div`
   display: flex;
-  margin-bottom: 30px;
   justify-content: center;
+  margin-bottom: 40px;
 `;
 
 const InputWrapper = styled.div`
   position: relative;
   width: 100%;
-  max-width: 500px;
-  backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 999px;
-  padding: 4px;
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.08),
-    inset 0 1px 1px rgba(255, 255, 255, 0.4);
-  transition: all 0.2s;
-  &:focus-within {
-    transform: scale(1.02);
-    box-shadow:
-      0 15px 40px rgba(0, 0, 0, 0.12),
-      0 0 0 3px rgba(0, 112, 243, 0.15);
-  }
+  max-width: 600px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 14px 45px 14px 18px;
-  border-radius: 999px;
+  padding: 14px 45px 14px 16px;
+  border-radius: 4px;
   border: none;
   outline: none;
-  background: transparent;
-  font-size: 0%.95rem;
+  background: #2a2a2a;
+  color: white;
+  font-size: 0.95rem;
+  &::placeholder {
+    color: #888;
+  }
+  &:focus {
+    background: #333;
+  }
 `;
 
 const ClearButton = styled.button`
   position: absolute;
-  right: 14px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   border: none;
   background: transparent;
-  font-size: 1rem;
+  color: #aaa;
   cursor: pointer;
-  opacity: 0.6;
   &:hover {
-    opacity: 1;
+    color: white;
   }
 `;

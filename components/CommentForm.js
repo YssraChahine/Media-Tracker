@@ -28,23 +28,19 @@ const Form = styled.form`
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  margin-top: 10px;
 `;
 
 const Input = styled.input`
-  flex: 1;
+  background: #222;
+  color: white;
+  border: none;
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
 `;
 
 const Button = styled.button`
-  background: #111;
-  color: white;
+  background: #e50914;
   border: none;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  &:hover {
-    opacity: 0.85;
-  }
+  color: white;
+  padding: 10px;
 `;

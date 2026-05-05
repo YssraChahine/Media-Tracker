@@ -37,21 +37,18 @@ export default function MediaCard({ item, onToggle, isAdded }) {
 }
 const Card = styled.div`
   position: relative;
+  border-radius: 6px;
   overflow: hidden;
-  border-radius: 18px;
   cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-
+  transition: transform 0.3s ease;
   &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    transform: scale(1.08);
+    z-index: 10;
   }
 `;
 
 const PosterWrapper = styled.div`
   position: relative;
-
   &:hover img {
     transform: scale(1.08);
   }
@@ -59,53 +56,40 @@ const PosterWrapper = styled.div`
 
 const Poster = styled.img`
   width: 100%;
-  height: 320px;
+  height: 300px;
   object-fit: cover;
-  transition: transform 0.3s ease;
 `;
 
 const Overlay = styled.div`
   position: absolute;
+  pointer-events: none;
   inset: 0;
-  pointer-events: none; /* 🔥 wichtig */
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.2),
-    transparent
-  );
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
 `;
 
 const Content = styled.div`
   position: absolute;
   bottom: 0;
-  padding: 16px;
+  padding: 12px;
   width: 100%;
-  color: white;
 `;
 
 const Title = styled.p`
-  font-size: 1rem;
-  margin-bottom: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
 `;
 
 const Type = styled.p`
-  font-size: 0.8rem;
-  opacity: 0.8;
-  margin-bottom: 10px;
+  font-size: 0.7rem;
+  color: #aaa;
 `;
 
 const AddButton = styled.button`
-  padding: 6px 10px;
-  border-radius: 6px;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
   border: none;
-  font-size: 0.75rem;
-  background: ${({ $active }) => ($active ? "#2ecc71" : "#0070f3")};
+  background: ${({ $active }) => ($active ? "#e50914" : "#333")};
   color: white;
   cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    opacity: 0.9;
-  }
 `;

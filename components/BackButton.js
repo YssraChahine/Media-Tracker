@@ -12,15 +12,12 @@ export default function BackButton() {
 }
 
 const Button = styled.button`
-  margin-bottom: 20px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  background: #eee;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.15s ease;
+  background: transparent;
+  border: 1px solid #333;
+  color: #ccc;
+  padding: 6px 12px;
   &:hover {
-    background: #ddd;
+    color: white;
+    border-color: white;
   }
 `;

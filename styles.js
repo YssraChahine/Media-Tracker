@@ -1,27 +1,18 @@
 import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
-  *,
-  *::before,
-  *::after {
+  * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-
   body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, system-ui;
-    background: radial-gradient(
-    circle at top,
-    #f9fbff,
-    #eef2f7
-  );
-  color: #111;
-} ;
-
-  h1, h2, h3 {
-    margin: 0;
+    background: #141414;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   }
-  button{
-    font-family: inherit;
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 `;

@@ -72,14 +72,9 @@ const List = styled.div`
 `;
 
 const Card = styled.div`
-  background: white;
+  background: #1f1f1f;
   padding: 14px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  transition: 0.2s;
-  &:hover {
-    transform: translateY(-2px);
-  }
+  border-radius: 10px;
 `;
 
 const Header = styled.div`
@@ -93,9 +88,7 @@ const Timestamp = styled.span`
 `;
 
 const Text = styled.p`
-  margin: 10px 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  color: #ddd;
 `;
 
 const Actions = styled.div`
@@ -105,15 +98,10 @@ const Actions = styled.div`
 `;
 
 const LikeButton = styled.button`
+  background: #333;
+  color: white;
   border: none;
-  background: #f1f3f5;
-  padding: 6px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  &:hover {
-    background: #e9ecef;
-  }
+  padding: 4px 8px;
 `;
 
 const Secondary = styled.button`
@@ -128,14 +116,9 @@ const Secondary = styled.button`
 `;
 
 const Danger = styled.button`
-  border: none;
+  color: #e50914;
   background: transparent;
-  color: #e03131;
-  cursor: pointer;
-  font-size: 0.8rem;
-  &:hover {
-    text-decoration: underline;
-  }
+  border: none;
 `;
 
 const EditArea = styled.div`
