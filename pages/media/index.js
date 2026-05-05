@@ -4,6 +4,7 @@ import BackButton from "@/components/BackButton";
 import MediaList from "@/components/MediaList";
 import Filter from "@/components/Filter";
 import { useState } from "react";
+import Insights from "@/components/Insights";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -94,6 +95,8 @@ export default function MediaPage() {
 
       <Heading>My Collection</Heading>
       <SubText>Track your movies & series</SubText>
+
+      <Insights media={media} />
 
       <SearchWrapper>
         <SearchInput
