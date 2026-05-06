@@ -8,14 +8,19 @@ export default async function handler(request, response) {
 
   try {
     const MediaResponse = await fetch(
-      `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_API_KEY}`
-    );
+      `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=videos`);
 
     if (!MediaResponse.ok) {
       return response.status(404).json({ error: "Not found in TMDB" });
     }
 
     const data = await MediaResponse.json();
+
+     const trailer = data.videos?.results?.find(
+      (video) =>
+        video.site === "YouTube" &&
+        video.type === "Trailer"
+    );
 
     const dbMedia = await Media.findOne({
       apiId: String(tmdbId),
@@ -24,6 +29,7 @@ export default async function handler(request, response) {
 
     const combined = {
       ...data,
+      trailerKey: trailer?.key || null,
       media_type: mediaType,
       userData: dbMedia
         ? {

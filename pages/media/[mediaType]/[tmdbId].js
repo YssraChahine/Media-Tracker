@@ -179,9 +179,30 @@ export default function MediaDetails() {
         </HeroContent>
       </Hero>
 
+      <ContentSection>
+        {data.trailerKey ? (
+          <TrailerSection>
+            <SectionTitle>Trailer</SectionTitle>
+
+            <TrailerWrapper>
+              <iFrame
+                src={`https://www.youtube.com/embed/${data.trailerKey}`}
+                title="Trailer"
+                allowFullScreen
+              />
+            </TrailerWrapper>
+          </TrailerSection>
+        ) : (
+          <TrailerSection>
+            <SectionTitle>Trailer</SectionTitle>
+            <Fallback>No trailer available</Fallback>
+          </TrailerSection>
+        )}
+      </ContentSection>
+
       {isSaved && (
-        <ContentSection>
-          <h2>Comments</h2>
+        <CommentsSection>
+          <SectionTitle>Comments</SectionTitle>
           <CommentForm onAdd={handleAdd} />
           <CommentsList
             comments={comments}
@@ -189,7 +210,7 @@ export default function MediaDetails() {
             onDelete={handleDelete}
             onLike={handleLike}
           />
-        </ContentSection>
+        </CommentsSection>
       )}
     </Main>
   );
@@ -292,4 +313,31 @@ const Overview = styled.p`
 
 const ContentSection = styled.div`
   padding: 20px;
+`;
+
+const TrailerSection = styled.section`
+  margin-bottom: 50px;
+`;
+
+const SectionTitle = styled.h2`
+  margin-bottom: 16px;
+`;
+
+const TrailerWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 12px;
+  overflow: hidden;
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+`;
+
+const CommentsSection = styled.section`
+  margin-top: 30px;
 `;
