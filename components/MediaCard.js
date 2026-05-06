@@ -1,38 +1,74 @@
 import styled from "styled-components";
 import Link from "next/link";
+import { useState } from "react";
+import TrailerModal from "./TrailerModal";
 
 export default function MediaCard({ item, onToggle, isAdded }) {
+  const [trailerKey, setTrailerKey] = useState(null);
+  const [showTrailer, setShowTrailer] = useState(false);
+
+  async function handleTrailer() {
+    try {
+      const response = await fetch(
+        `/api/trailer/${item.media_type}/${item.id}`
+      );
+
+      const data = await response.json();
+
+      if (data.key) {
+        setTrailerKey(data.key);
+        setShowTrailer(true);
+      } else {
+        alert("No trailer available");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
-    <Card>
-      <PosterWrapper>
-        <Link href={`/media/${item.media_type}/${item.id}?from=home`}>
-          <Poster
-            src={
-              item.poster_path
-                ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-                : "/placeholder.jpg"
-            }
-            alt={item.title || item.name}
-          />
-        </Link>
+    <>
+      <Card>
+        <PosterWrapper>
+          <Link href={`/media/${item.media_type}/${item.id}?from=home`}>
+            <Poster
+              src={
+                item.poster_path
+                  ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
+                  : "/placeholder.jpg"
+              }
+              alt={item.title || item.name}
+            />
+          </Link>
 
-        <Overlay />
-      </PosterWrapper>
+          <Overlay />
+        </PosterWrapper>
 
-      <Content>
-        <Title>{item.title || item.name}</Title>
-        <Type>{item.media_type}</Type>
+        <Content>
+          <Title>{item.title || item.name}</Title>
+          <Type>{item.media_type}</Type>
 
-        <AddButton
-          onClick={() => {
-            onToggle(item);
-          }}
-          $active={isAdded}
-        >
-          {isAdded ? "✓ Added" : "+ Add"}
-        </AddButton>
-      </Content>
-    </Card>
+          <ButtonRow>
+            <TrailerButton onClick={handleTrailer}>▶ Trailer</TrailerButton>
+
+            <AddButton
+              onClick={() => {
+                onToggle(item);
+              }}
+              $active={isAdded}
+            >
+              {isAdded ? "✓ Added" : "+ Add"}
+            </AddButton>
+          </ButtonRow>
+        </Content>
+      </Card>
+      {showTrailer && (
+        <TrailerModal
+          trailerKey={trailerKey}
+          onClose={() => setShowTrailer(false)}
+        />
+      )}
+    </>
   );
 }
 const Card = styled.div`
@@ -92,4 +128,23 @@ const AddButton = styled.button`
   background: ${({ $active }) => ($active ? "#e50914" : "#333")};
   color: white;
   cursor: pointer;
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+const TrailerButton = styled.button`
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
 `;
