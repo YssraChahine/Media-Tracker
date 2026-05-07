@@ -173,6 +173,15 @@ export default function MediaDetails() {
             <Release>
               {formatDate(data.release_date || data.first_air_date)}
             </Release>
+            {mediaType === "tv" && (
+              <SeasonCount>
+                {data.number_of_seasons
+                  ? `${data.number_of_seasons} ${
+                      data.number_of_seasons === 1 ? "Season" : "Seasons"
+                    }`
+                  : "Unknown Seasons"}
+              </SeasonCount>
+            )}
           </MetaRow>
 
           <ButtonRow>
@@ -399,4 +408,9 @@ const TrailerWrapper = styled.div`
 
 const CommentsSection = styled.section`
   margin-top: 30px;
+`;
+
+const SeasonCount = styled.span`
+  color: #b3b3b3;
+  font-size: 0.9rem;
 `;
