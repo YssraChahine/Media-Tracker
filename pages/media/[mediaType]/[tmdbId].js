@@ -22,6 +22,16 @@ export default function MediaDetails() {
     });
   }
 
+  function isUpcoming(dateString) {
+    if (!dateString) return false;
+    return new Date(dateString) > new Date();
+  }
+
+  function getReleaseLabel(dateString) {
+    if (!dateString) return "Unknown";
+    return isUpcoming(dateString) ? "Coming Soon" : "Released";
+  }
+
   const { data, error, isLoading, mutate } = useSWR(
     mediaType && tmdbId ? `/api/media/details/${mediaType}/${tmdbId}` : null,
     fetcher
@@ -53,6 +63,8 @@ export default function MediaDetails() {
   }
 
   const isSaved = !!data.userData;
+  const releaseDate = data.release_date || data.first_air_date;
+  const upcoming = isUpcoming(releaseDate);
 
   async function handleToggle() {
     try {
@@ -170,9 +182,14 @@ export default function MediaDetails() {
               )}
             </Genres>
 
-            <Release>
-              {formatDate(data.release_date || data.first_air_date)}
-            </Release>
+            <ReleaseWrapper>
+              <Release>
+                {formatDate(data.release_date || data.first_air_date)}
+              </Release>
+              <ReleaseBadge $upcoming={upcoming}>
+                {getReleaseLabel(releaseDate)}
+              </ReleaseBadge>
+            </ReleaseWrapper>
             {mediaType === "tv" && (
               <SeasonCount>
                 {data.number_of_seasons
@@ -413,4 +430,24 @@ const CommentsSection = styled.section`
 const SeasonCount = styled.span`
   color: #b3b3b3;
   font-size: 0.9rem;
+`;
+
+const ReleaseWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+const ReleaseBadge = styled.span`
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: ${({ $upcoming }) =>
+    $upcoming ? "rgba(229, 9, 20, 0.18)" : "rgba(46, 204, 113, 0.15)"};
+  color: ${({ $upcoming }) => ($upcoming ? "#ff4d5a" : "#2ecc71")};
+  border: 1px solid
+    ${({ $upcoming }) =>
+      $upcoming ? "rgba(229,9,20,0.4)" : "rgba(46,204,113,0.4)"};
 `;
