@@ -40,6 +40,14 @@ const mediaSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  currentSeason: {
+    type: Number,
+    default: null,
+  },
+  currentEpisode: {
+    type: Number,
+    default: null,
+  },
   comments: [commentSchema],
 });
 

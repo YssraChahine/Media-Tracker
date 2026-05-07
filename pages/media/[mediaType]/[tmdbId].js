@@ -5,6 +5,7 @@ import Link from "next/link";
 import CommentForm from "@/components/CommentForm";
 import CommentsList from "@/components/CommentsList";
 import GenreTag from "@/components/GenreTag";
+import SeriesProgress from "@/components/SeriesProgress";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -86,6 +87,22 @@ export default function MediaDetails() {
       body: JSON.stringify({ status }),
     });
     mutate();
+  }
+
+  async function handleProgressUpdate(progress) {
+    try {
+      const progressResponse = await fetch(`/api/media/${data.userData._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(progress),
+      });
+      if (!progressResponse.ok) {
+        throw new Error("Progress update failed");
+      }
+      mutate();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function handleAdd(text) {
@@ -174,6 +191,12 @@ export default function MediaDetails() {
               </StatusSelect>
             )}
           </ButtonRow>
+          {mediaType === "tv" && isSaved && (
+            <SeriesProgress
+              media={data.userData}
+              onUpdate={handleProgressUpdate}
+            />
+          )}
 
           <Overview>{data.overview}</Overview>
         </HeroContent>
@@ -185,7 +208,7 @@ export default function MediaDetails() {
             <SectionTitle>Trailer</SectionTitle>
 
             <TrailerWrapper>
-              <iFrame
+              <iframe
                 src={`https://www.youtube.com/embed/${data.trailerKey}`}
                 title="Trailer"
                 allowFullScreen
@@ -198,41 +221,52 @@ export default function MediaDetails() {
             <Fallback>No trailer available</Fallback>
           </TrailerSection>
         )}
-      </ContentSection>
 
-      {isSaved && (
-        <CommentsSection>
-          <SectionTitle>Comments</SectionTitle>
-          <CommentForm onAdd={handleAdd} />
-          <CommentsList
-            comments={comments}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onLike={handleLike}
-          />
-        </CommentsSection>
-      )}
+        {isSaved && (
+          <CommentsSection>
+            <SectionTitle>Comments</SectionTitle>
+            <CommentForm onAdd={handleAdd} />
+            <CommentsList
+              comments={comments}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onLike={handleLike}
+            />
+          </CommentsSection>
+        )}
+      </ContentSection>
     </Main>
   );
 }
 
 const Main = styled.main`
   width: 100%;
+  min-height: 100vh;
+  background: #141414;
+  color: white;
 `;
 
 const BackLink = styled(Link)`
-  display: inline-block;
-  margin: 15px;
-  color: #aaa;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 20;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Message = styled.p`
   text-align: center;
+  padding: 40px;
 `;
 
 const Hero = styled.div`
   position: relative;
-  height: 75vh;
+  height: 80vh;
   display: flex;
   align-items: flex-end;
 `;
@@ -252,45 +286,57 @@ const Overlay = styled.div`
     to top,
     rgba(20, 20, 20, 1),
     rgba(20, 20, 20, 0.5),
-    transparent
+    rgba(20, 20, 20, 0.3)
   );
 `;
 
 const HeroContent = styled.div`
   position: relative;
   z-index: 2;
-  padding: 20px;
-  max-width: 600px;
+  max-width: 700px;
+  padding: 30px;
+  @media (max-width: 600px) {
+    padding: 22px;
+  }
 `;
 
 const Title = styled.h1`
   font-size: 2rem;
+  margin-bottom: 14px;
+  @media (min-width: 768px) {
+    font-size: 4rem;
+  }
 `;
 
 const MetaRow = styled.div`
-  margin: 10px 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
 `;
 
 const Genres = styled.div`
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
 `;
 
 const Release = styled.span`
   color: #ccc;
+  font-size: 0.9rem;
 `;
 
 const Fallback = styled.span`
-  color: #777;
+  color: #888;
 `;
 
 const ButtonRow = styled.div`
-  margin: 15px 0;
+  margin: 20px 0;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 `;
 
@@ -298,21 +344,34 @@ const PrimaryButton = styled.button`
   background: ${({ $active }) => ($active ? "#e50914" : "white")};
   color: ${({ $active }) => ($active ? "white" : "black")};
   border: none;
-  padding: 10px 18px;
+  padding: 12px 18px;
+  border-radius: 4px;
+  font-weight: 600;
   cursor: pointer;
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 const StatusSelect = styled.select`
-  padding: 8px;
+  background: #2a2a2a;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
 `;
 
 const Overview = styled.p`
-  margin-top: 10px;
+  line-height: 1.7;
   color: #ddd;
+  margin-top: 20px;
+  max-width: 700px;
 `;
 
-const ContentSection = styled.div`
-  padding: 20px;
+const ContentSection = styled.section`
+  max-width: 1100px;
+  margin: auto;
+  padding: 30px 20px;
 `;
 
 const TrailerSection = styled.section`

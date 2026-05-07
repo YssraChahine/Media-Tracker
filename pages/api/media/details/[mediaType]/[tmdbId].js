@@ -8,7 +8,8 @@ export default async function handler(request, response) {
 
   try {
     const MediaResponse = await fetch(
-      `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=videos`);
+      `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=videos`
+    );
 
     if (!MediaResponse.ok) {
       return response.status(404).json({ error: "Not found in TMDB" });
@@ -16,10 +17,8 @@ export default async function handler(request, response) {
 
     const data = await MediaResponse.json();
 
-     const trailer = data.videos?.results?.find(
-      (video) =>
-        video.site === "YouTube" &&
-        video.type === "Trailer"
+    const trailer = data.videos?.results?.find(
+      (video) => video.site === "YouTube" && video.type === "Trailer"
     );
 
     const dbMedia = await Media.findOne({
@@ -36,6 +35,8 @@ export default async function handler(request, response) {
             _id: dbMedia._id,
             status: dbMedia.status,
             isFavorite: dbMedia.isFavorite,
+            currentSeason: dbMedia.currentSeason,
+            currentEpisode: dbMedia.currentEpisode,
           }
         : null,
     };
