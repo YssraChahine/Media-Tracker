@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import useSWR from "swr";
 import MediaCard from "@/components/MediaCard";
+import RecommendationsSection from "@/components/RecommendationsSection";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -20,6 +21,9 @@ export default function HomePage() {
     isLoading: featuredLoading,
     error: featuredError,
   } = useSWR("/api/featured", fetcher);
+
+  const { data: recommendations = [], isLoading: recommendationsLoading } =
+    useSWR("/api/recommendations", fetcher);
 
   const addedIds = media.map((item) => Number(item.apiId));
 
@@ -78,96 +82,188 @@ export default function HomePage() {
 
   return (
     <Main>
-      <Heading>Media Tracker</Heading>
+      <HeroSection>
+        <Overlay />
 
-      <Link href="/media">
-        <ViewButton>View My List</ViewButton>
-      </Link>
+        <HeroContent>
+          <HeroTitle>Unlimited movies and series.</HeroTitle>
 
-      <SearchBar onSearch={handleSearch} />
+          <HeroText>
+            Track your favorite media and discover new recommendations.
+          </HeroText>
 
-      {loading && <Message>Searching...</Message>}
+          <Link href="/media">
+            <ViewButton>View My List</ViewButton>
+          </Link>
+        </HeroContent>
+      </HeroSection>
 
-      {!hasSearched && featuredLoading && (
-        <Message>Loading popular media...</Message>
-      )}
+      <Content>
+        <SearchBar onSearch={handleSearch} />
 
-      {featuredError && <Message>Error loading content.</Message>}
+        {loading && <Message>Searching...</Message>}
 
-      {!loading && hasSearched && results.length === 0 && (
-        <Message>No results found</Message>
-      )}
+        {!hasSearched && featuredLoading && (
+          <Message>Loading popular media...</Message>
+        )}
 
-      {results.length > 0 && (
-        <Grid>
-          {results.map((item) => (
-            <MediaCard
-              key={item.id}
-              item={item}
-              onToggle={handleToggle}
-              isAdded={addedIds.includes(item.id)}
-            />
-          ))}
-        </Grid>
-      )}
-      {!hasSearched && !featuredLoading && (
-        <>
-          <SubHeading>Popular right now</SubHeading>
-          <Grid>
-            {featured.map((item) => (
-              <MediaCard
-                key={item.id}
-                item={item}
-                onToggle={handleToggle}
-                isAdded={addedIds.includes(item.id)}
-              />
-            ))}
-          </Grid>
-        </>
-      )}
+        {featuredError && <Message>Error loading content.</Message>}
+
+        {!loading && hasSearched && results.length === 0 && (
+          <Message>No results found</Message>
+        )}
+
+        {results.length > 0 && (
+          <Section>
+            <SectionTitle>Search Results</SectionTitle>
+            <Grid>
+              {results.map((item) => (
+                <MediaCard
+                  key={item.id}
+                  item={item}
+                  onToggle={handleToggle}
+                  isAdded={addedIds.includes(item.id)}
+                />
+              ))}
+            </Grid>
+          </Section>
+        )}
+        {!hasSearched && !featuredLoading && (
+          <>
+            <Section>
+              <SectionTitle>Popular right now</SectionTitle>
+              <Grid>
+                {featured.map((item) => (
+                  <MediaCard
+                    key={item.id}
+                    item={item}
+                    onToggle={handleToggle}
+                    isAdded={addedIds.includes(item.id)}
+                  />
+                ))}
+              </Grid>
+            </Section>
+            <Section>
+              {recommendationsLoading ? (
+                <Message>Loading recommendations...</Message>
+              ) : (
+                <RecommendationsSection
+                  recommendations={recommendations}
+                  onToggle={handleToggle}
+                  addedIds={addedIds}
+                />
+              )}
+            </Section>
+          </>
+        )}
+      </Content>
     </Main>
   );
 }
 
 const Main = styled.main`
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 20px;
+  min-height: 100vh;
+  background: #141414;
+  color: white;
 `;
 
-const Heading = styled.h1`
-  text-align: center;
-  margin-bottom: 30px;
+const HeroSection = styled.section`
+  position: relative;
+  height: 70vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  padding: 40px;
+  background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  @media (max-width: 768px) {
+    height: 60vh;
+    min-height: 500px;
+    padding: 24px;
+  }
 `;
 
 const Message = styled.p`
   text-align: center;
-  color: #888;
+  color: #aaa;
+  margin-top: 30px;
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 28px;
-`;
-
-const ViewButton = styled.button`
-  display: block;
-  margin: 0 auto 30px;
-  padding: 12px 20px;
-  border-radius: 999px;
-  border: none;
-  background: black;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  &:hover {
-    background: #222;
-    transform: translateY(-2px);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 `;
 
-const SubHeading = styled.h2`
-  margin: 30px 0 10px;
+const ViewButton = styled.button`
+  border: none;
+  background: #e50914;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    background: #f40612;
+    transform: scale(1.03);
+  }
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(20, 20, 20, 1),
+    rgba(20, 20, 20, 0.5),
+    rgba(20, 20, 20, 0.3)
+  );
+`;
+
+const HeroContent = styled.div`
+  position: relative;
+  z-index: 2;
+  max-width: 650px;
+`;
+
+const HeroTitle = styled.h1`
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 20px;
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+`;
+
+const HeroText = styled.p`
+  font-size: 1.1rem;
+  color: #ddd;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const Content = styled.div`
+  max-width: 1400px;
+  margin: auto;
+  padding: 30px 24px 80px;
+`;
+
+const Section = styled.section`
+  margin-top: 60px;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  font-weight: 700;
 `;
