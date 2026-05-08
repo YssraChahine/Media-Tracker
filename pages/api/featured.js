@@ -12,7 +12,7 @@ export default async function handler(request, response) {
     const filtered = data.results.filter(
       (item) => item.media_type === "movie" || item.media_type === "tv"
     );
-    response.status(200).json(filtered);
+    response.status(200).json(filtered.slice(0, 10));
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Failed to fetch featured media." });
