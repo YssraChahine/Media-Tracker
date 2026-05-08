@@ -6,6 +6,7 @@ import CommentForm from "@/components/CommentForm";
 import CommentsList from "@/components/CommentsList";
 import GenreTag from "@/components/GenreTag";
 import SeriesProgress from "@/components/SeriesProgress";
+import RatingBadge from "@/components/RatingBadge";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -217,17 +218,14 @@ export default function MediaDetails() {
               </StatusSelect>
             )}
           </ButtonRow>
-          {mediaType === "tv" && isSaved && (
-            <SeriesProgress
-              media={data.userData}
-              onUpdate={handleProgressUpdate}
-            />
-          )}
 
+          <RatingBadge rating={data.vote_average} votes={data.vote_count} />
           <Overview>{data.overview}</Overview>
         </HeroContent>
       </Hero>
-
+      {mediaType === "tv" && isSaved && (
+        <SeriesProgress media={data.userData} onUpdate={handleProgressUpdate} />
+      )}
       <ContentSection>
         {data.trailerKey ? (
           <TrailerSection>

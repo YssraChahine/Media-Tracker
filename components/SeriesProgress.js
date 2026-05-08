@@ -83,7 +83,7 @@ export default function SeriesProgress({ media, onUpdate }) {
 }
 
 const Wrapper = styled.section`
-  margin-top: 22px;
+  margin: 25px;
   padding: 18px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.08);
