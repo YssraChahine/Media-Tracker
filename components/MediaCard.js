@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import TrailerModal from "./TrailerModal";
 
-export default function MediaCard({ item, onToggle, isAdded }) {
+export default function MediaCard({ item, onToggle, isAdded, upcoming }) {
   const [trailerKey, setTrailerKey] = useState(null);
   const [showTrailer, setShowTrailer] = useState(false);
 
@@ -42,6 +42,7 @@ export default function MediaCard({ item, onToggle, isAdded }) {
           </Link>
 
           <Overlay />
+          {upcoming && <UpcomingBadge>Coming Soon</UpcomingBadge>}
         </PosterWrapper>
 
         <Content>
@@ -147,4 +148,18 @@ const TrailerButton = styled.button`
   &:hover {
     background: rgba(255, 255, 255, 0.25);
   }
+`;
+
+const UpcomingBadge = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  background: #e50914;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
 `;

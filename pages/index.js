@@ -6,6 +6,7 @@ import Link from "next/link";
 import useSWR from "swr";
 import MediaCard from "@/components/MediaCard";
 import RecommendationsSection from "@/components/RecommendationsSection";
+import UpcomingSection from "@/components/UpcomingSection";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -24,6 +25,11 @@ export default function HomePage() {
 
   const { data: recommendations = [], isLoading: recommendationsLoading } =
     useSWR("/api/recommendations", fetcher);
+
+  const { data: upcoming = [], isLoading: upcomingLoading } = useSWR(
+    "/api/upcoming",
+    fetcher
+  );
 
   const addedIds = media.map((item) => Number(item.apiId));
 
@@ -149,6 +155,17 @@ export default function HomePage() {
               ) : (
                 <RecommendationsSection
                   recommendations={recommendations}
+                  onToggle={handleToggle}
+                  addedIds={addedIds}
+                />
+              )}
+            </Section>
+            <Section>
+              {upcomingLoading ? (
+                <Message>Loading upcoming releases...</Message>
+              ) : (
+                <UpcomingSection
+                  upcoming={upcoming}
                   onToggle={handleToggle}
                   addedIds={addedIds}
                 />
