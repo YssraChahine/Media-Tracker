@@ -40,13 +40,17 @@ const mediaSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  watchProgress: {
+    type: Number,
+    default: 0,
+  },
   currentSeason: {
     type: Number,
-    default: null,
+    default: 1,
   },
   currentEpisode: {
     type: Number,
-    default: null,
+    default: 1,
   },
   comments: [commentSchema],
 });

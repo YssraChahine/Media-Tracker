@@ -5,7 +5,7 @@ import Link from "next/link";
 import CommentForm from "@/components/CommentForm";
 import CommentsList from "@/components/CommentsList";
 import GenreTag from "@/components/GenreTag";
-import SeriesProgress from "@/components/SeriesProgress";
+import ProgressTracker from "@/components/ProgressTracker";
 import RatingBadge from "@/components/RatingBadge";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
@@ -102,16 +102,16 @@ export default function MediaDetails() {
     mutate();
   }
 
-  async function handleProgressUpdate(progress) {
+  async function handleProgressSave(progressData) {
     try {
-      const progressResponse = await fetch(`/api/media/${data.userData._id}`, {
+      await fetch(`/api/media/${data.userData._id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(progress),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(progressData),
       });
-      if (!progressResponse.ok) {
-        throw new Error("Progress update failed");
-      }
+
       mutate();
     } catch (error) {
       console.error(error);
@@ -223,8 +223,14 @@ export default function MediaDetails() {
           <Overview>{data.overview}</Overview>
         </HeroContent>
       </Hero>
-      {mediaType === "tv" && isSaved && (
-        <SeriesProgress media={data.userData} onUpdate={handleProgressUpdate} />
+      {isSaved && (
+        <ProgressTracker
+          mediaType={mediaType}
+          media={data.userData}
+          totalEpisodes={data.number_of_episodes || 0}
+          seasons={data.seasons || []}
+          onSave={handleProgressSave}
+        />
       )}
       <ContentSection>
         {data.trailerKey ? (

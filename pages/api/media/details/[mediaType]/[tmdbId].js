@@ -35,6 +35,7 @@ export default async function handler(request, response) {
             _id: dbMedia._id,
             status: dbMedia.status,
             isFavorite: dbMedia.isFavorite,
+            watchProgress: dbMedia.watchProgress,
             currentSeason: dbMedia.currentSeason,
             currentEpisode: dbMedia.currentEpisode,
           }

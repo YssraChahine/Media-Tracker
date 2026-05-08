@@ -13,8 +13,22 @@ export default async function handler(request, response) {
         return response.status(404).json({ message: "Media not found" });
       }
 
-      const { status, isFavorite, currentSeason, currentEpisode } =
-        request.body;
+      const {
+        status,
+        isFavorite,
+        watchProgress,
+        currentSeason,
+        currentEpisode,
+      } = request.body;
+      if (watchProgress !== undefined) {
+        media.watchProgress = watchProgress;
+      }
+      if (currentSeason !== undefined) {
+        media.currentSeason = currentSeason;
+      }
+      if (currentEpisode !== undefined) {
+        media.currentEpisode = currentEpisode;
+      }
       if (status !== undefined) {
         media.status = status;
       }
