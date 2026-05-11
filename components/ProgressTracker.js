@@ -11,9 +11,9 @@ export default function ProgressTracker({
   const [season, setSeason] = useState(media.currentSeason || 1);
   const [episode, setEpisode] = useState(media.currentEpisode || 1);
   const [progress, setProgress] = useState(media.watchProgress || 0);
-  const selectedSeason = useMemo(() => {
-    return seasons.find((item) => item.season_number === Number(season));
-  }, [season, seasons]);
+  const selectedSeason = seasons.find(
+    (item) => item.season_number === Number(season)
+  );
   useEffect(() => {
     if (mediaType === "tv" && totalEpisodes > 0) {
       const watchedPreviousEpisodes = seasons
@@ -25,11 +25,16 @@ export default function ProgressTracker({
     }
   }, [episode, season, seasons, totalEpisodes, mediaType]);
 
-  useEffect(() => {
-    if (selectedSeason && episode > selectedSeason.episode_count) {
+  function handleSeasonChange(event) {
+    const nextSeason = Number(event.target.value);
+    setSeason(nextSeason);
+    const foundSeason = seasons.find(
+      (item) => item.season_number === nextSeason
+    );
+    if (foundSeason && episode > foundSeason.episode_count) {
       setEpisode(1);
     }
-  }, [selectedSeason, episode]);
+  }
 
   async function handleSave() {
     await onSave({
@@ -53,19 +58,16 @@ export default function ProgressTracker({
             min="0"
             max="100"
             value={progress}
-            onChange={(event) => setProgress(event.target.value)}
+            onChange={(event) => setProgress(Number(event.target.value))}
           />
         </MovieSection>
       ) : (
         <SeriesFields>
           <Field>
             <Label>Season</Label>
-            <Select
-              value={season}
-              onChange={(event) => setSeason(event.target.value)}
-            >
+            <Select value={season} onChange={handleSeasonChange}>
               {seasons.map((item) => (
-                <option key={item.id} value={item.season_number}>
+                <option key={item.season_number} value={item.season_number}>
                   Season {item.season_number}
                 </option>
               ))}
@@ -75,16 +77,22 @@ export default function ProgressTracker({
             <Label>Episode</Label>
             <Select
               value={episode}
-              onChange={(event) => setEpisode(event.target.value)}
+              onChange={(event) => setEpisode(Number(event.target.value))}
             >
               {selectedSeason &&
                 Array.from({
                   length: selectedSeason.episode_count,
-                }).map((_, index) => (
-                  <option key={index + 1} value={index + 1}>
-                    Episode {index + 1}
-                  </option>
-                ))}
+                }).map((_, index) => {
+                  const episodeNumber = index + 1;
+                  return (
+                    <option
+                      key={`episode-${episodeNumber}`}
+                      value={episodeNumber}
+                    >
+                      Episode {episodeNumber}
+                    </option>
+                  );
+                })}
             </Select>
           </Field>
         </SeriesFields>
