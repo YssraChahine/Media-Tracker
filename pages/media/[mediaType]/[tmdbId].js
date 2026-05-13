@@ -272,33 +272,45 @@ export default function MediaDetails() {
 const Main = styled.main`
   width: 100%;
   min-height: 100vh;
-  background: #141414;
+  background: #0a0a0a;
   color: white;
+  overflow-x: hidden;
 `;
 
 const BackLink = styled(Link)`
   position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 20;
+  top: 26px;
+  left: 26px;
+  z-index: 30;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: white;
-  text-decoration: none;
   font-size: 0.9rem;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
   &:hover {
-    text-decoration: underline;
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
   }
 `;
 
 const Message = styled.p`
   text-align: center;
-  padding: 40px;
+  padding: 60px;
+  color: #8d8d8d;
 `;
 
-const Hero = styled.div`
+const Hero = styled.section`
   position: relative;
-  height: 80vh;
+  min-height: 92vh;
   display: flex;
   align-items: flex-end;
+  overflow: hidden;
 `;
 
 const Backdrop = styled.img`
@@ -307,6 +319,7 @@ const Backdrop = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.03);
 `;
 
 const Overlay = styled.div`
@@ -314,110 +327,140 @@ const Overlay = styled.div`
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(20, 20, 20, 1),
-    rgba(20, 20, 20, 0.5),
-    rgba(20, 20, 20, 0.3)
+    rgba(10, 10, 10, 1) 5%,
+    rgba(10, 10, 10, 0.88) 25%,
+    rgba(10, 10, 10, 0.45) 55%,
+    rgba(10, 10, 10, 0.2) 100%
   );
 `;
 
 const HeroContent = styled.div`
   position: relative;
   z-index: 2;
-  max-width: 700px;
-  padding: 30px;
-  @media (max-width: 600px) {
-    padding: 22px;
+  max-width: 820px;
+  padding: 90px 40px 50px;
+  @media (max-width: 768px) {
+    padding: 120px 22px 30px;
   }
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 14px;
-  @media (min-width: 768px) {
-    font-size: 4rem;
-  }
+  font-size: clamp(3rem, 8vw, 5.8rem);
+  line-height: 0.92;
+  letter-spacing: -3px;
+  font-weight: 900;
+  margin-bottom: 24px;
+  background: linear-gradient(to bottom, #fff, #bfbfbf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `;
 
 const MetaRow = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-    align-items: center;
-  }
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
 `;
 
 const Genres = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 `;
 
 const Release = styled.span`
-  color: #ccc;
-  font-size: 0.9rem;
+  color: #c5c5c5;
+  font-size: 0.92rem;
 `;
 
 const Fallback = styled.span`
-  color: #888;
+  color: #8a8a8a;
 `;
 
 const ButtonRow = styled.div`
-  margin: 20px 0;
+  margin: 30px 0 24px;
   display: flex;
-  gap: 12px;
   flex-wrap: wrap;
+  gap: 14px;
 `;
 
 const PrimaryButton = styled.button`
-  background: ${({ $active }) => ($active ? "#e50914" : "white")};
-  color: ${({ $active }) => ($active ? "white" : "black")};
+  padding: 16px 24px;
+  border-radius: 18px;
   border: none;
-  padding: 12px 18px;
-  border-radius: 4px;
-  font-weight: 600;
+  background: ${({ $active }) =>
+    $active
+      ? "linear-gradient(135deg,#e50914,#ff3040)"
+      : "linear-gradient(135deg,#ffffff,#d9d9d9)"};
+  color: ${({ $active }) => ($active ? "white" : "black")};
+  font-weight: 800;
+  font-size: 0.95rem;
   cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: ${({ $active }) =>
+    $active
+      ? "0 18px 40px rgba(229,9,20,0.28)"
+      : "0 10px 25px rgba(255,255,255,0.12)"};
   &:hover {
-    opacity: 0.9;
+    transform: translateY(-2px);
   }
 `;
 
 const StatusSelect = styled.select`
-  background: #2a2a2a;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.04)
+  );
+  backdrop-filter: blur(10px);
   color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+    border-color: rgba(229, 9, 20, 0.4);
+  }
 `;
 
 const Overview = styled.p`
-  line-height: 1.7;
-  color: #ddd;
-  margin-top: 20px;
-  max-width: 700px;
+  margin-top: 28px;
+  max-width: 760px;
+  line-height: 1.9;
+  color: #d3d3d3;
+  font-size: 1rem;
 `;
 
 const ContentSection = styled.section`
-  max-width: 1100px;
-  margin: auto;
-  padding: 30px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 24px 120px;
 `;
 
 const TrailerSection = styled.section`
-  margin-bottom: 50px;
+  margin-bottom: 70px;
 `;
 
 const SectionTitle = styled.h2`
-  margin-bottom: 16px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 24px;
 `;
 
 const TrailerWrapper = styled.div`
   position: relative;
   width: 100%;
   padding-top: 56.25%;
-  border-radius: 12px;
   overflow: hidden;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
   iframe {
     position: absolute;
     inset: 0;
@@ -426,9 +469,8 @@ const TrailerWrapper = styled.div`
     border: none;
   }
 `;
-
 const CommentsSection = styled.section`
-  margin-top: 30px;
+  margin-top: 80px;
 `;
 
 const SeasonCount = styled.span`
@@ -444,14 +486,16 @@ const ReleaseWrapper = styled.div`
 `;
 
 const ReleaseBadge = styled.span`
-  padding: 4px 10px;
+  padding: 7px 14px;
   border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(10px);
   background: ${({ $upcoming }) =>
-    $upcoming ? "rgba(229, 9, 20, 0.18)" : "rgba(46, 204, 113, 0.15)"};
-  color: ${({ $upcoming }) => ($upcoming ? "#ff4d5a" : "#2ecc71")};
+    $upcoming ? "rgba(229,9,20,0.18)" : "rgba(46,204,113,0.16)"};
+  color: ${({ $upcoming }) => ($upcoming ? "#ff626d" : "#49d98d")};
   border: 1px solid
     ${({ $upcoming }) =>
-      $upcoming ? "rgba(229,9,20,0.4)" : "rgba(46,204,113,0.4)"};
+      $upcoming ? "rgba(229,9,20,0.35)" : "rgba(46,204,113,0.35)"};
 `;

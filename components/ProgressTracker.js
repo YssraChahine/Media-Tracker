@@ -108,42 +108,96 @@ export default function ProgressTracker({
 }
 
 const Wrapper = styled.div`
-  margin-top: 30px;
-  padding: 24px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
+  margin: 50px auto 0;
+  width: 100%;
+  max-width: 720px;
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.03)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  @media (max-width: 768px) {
+    padding: 22px;
+    border-radius: 22px;
+  }
 `;
 
 const Title = styled.h2`
-  margin-bottom: 18px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
 `;
 
 const ProgressInfo = styled.p`
-  color: #bbb;
-  margin-bottom: 12px;
+  color: #9d9d9d;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
 `;
 
 const ProgressBar = styled.div`
+  position: relative;
   width: 100%;
-  height: 12px;
+  height: 14px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.03)
+  );
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35);
 `;
 
 const ProgressFill = styled.div`
   width: ${({ $progress }) => $progress}%;
   height: 100%;
-  background: #e50914;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #e50914 0%, #ff3040 50%, #ff5964 100%);
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.35);
+  transition: width 0.3s ease;
 `;
 
 const MovieSection = styled.div`
-  margin-top: 20px;
+  margin-top: 24px;
 `;
 
 const Slider = styled.input`
   width: 100%;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  &::-webkit-slider-runnable-track {
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.05)
+    );
+  }
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    margin-top: -5px;
+    background: #e50914;
+    border: 2px solid white;
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+    transition: transform 0.2s ease;
+  }
+  &::-webkit-slider-thumb:hover {
+    transform: scale(1.08);
+  }
 `;
 
 const SeriesFields = styled.div`
@@ -160,33 +214,69 @@ const Field = styled.div`
 `;
 
 const Label = styled.label`
-  color: #bbb;
-  font-size: 0.85rem;
+  color: #b3b3b3;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
 `;
 
 const Select = styled.select`
-  min-width: 160px;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: #2a2a2a;
+  min-width: 170px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.04)
+  );
+  backdrop-filter: blur(10px);
   color: white;
-`;
-
-const SaveButton = styled.button`
-  margin-top: 24px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 10px;
-  background: #e50914;
-  color: white;
+  font-size: 0.85rem;
   cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+  &:focus {
+    outline: none;
+    border-color: rgba(229, 9, 20, 0.45);
+  }
   &:hover {
-    opacity: 0.9;
+    transform: translateY(-1px);
   }
 `;
 
-const Current = styled.p`
-  margin-top: 16px;
-  color: #bbb;
+const SaveButton = styled.button`
+  margin-top: 28px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #e50914, #ff3040);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 12px 24px rgba(229, 9, 20, 0.22);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 35px rgba(229, 9, 20, 0.35);
+  }
+`;
+
+const Current = styled.div`
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #d0d0d0;
+  font-size: 0.82rem;
+  font-weight: 500;
 `;

@@ -74,12 +74,15 @@ export default function MediaCard({ item, onToggle, isAdded, upcoming }) {
 }
 const Card = styled.div`
   position: relative;
-  border-radius: 6px;
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   &:hover {
-    transform: scale(1.08);
+    transform: translateY(-6px);
     z-index: 10;
   }
 `;
@@ -87,79 +90,102 @@ const Card = styled.div`
 const PosterWrapper = styled.div`
   position: relative;
   &:hover img {
-    transform: scale(1.08);
+    transform: scale(1.04);
   }
 `;
 
 const Poster = styled.img`
   width: 100%;
-  height: 300px;
+  height: 320px;
   object-fit: cover;
+  transition: transform 0.35s ease;
 `;
 
 const Overlay = styled.div`
   position: absolute;
   pointer-events: none;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0.2),
+    transparent
+  );
 `;
 
 const Content = styled.div`
   position: absolute;
   bottom: 0;
-  padding: 12px;
+  padding: 18px;
   width: 100%;
 `;
 
 const Title = styled.p`
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
 `;
 
 const Type = styled.p`
-  font-size: 0.7rem;
-  color: #aaa;
+  font-size: 0.78rem;
+  color: #b3b3b3;
+  text-transform: capitalize;
 `;
 
 const AddButton = styled.button`
-  margin-top: 6px;
-  padding: 4px 8px;
-  font-size: 0.7rem;
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
   border: none;
-  background: ${({ $active }) => ($active ? "#e50914" : "#333")};
+  border-radius: 10px;
+  background: ${({ $active }) =>
+    $active ? "#e50914" : "rgba(255,255,255,0.12)"};
   color: white;
   cursor: pointer;
+  transition: 0.2s ease;
+  backdrop-filter: blur(6px);
+  &:hover {
+    background: ${({ $active }) =>
+      $active ? "#ff1f2d" : "rgba(255,255,255,0.2)"};
+  }
 `;
 
 const ButtonRow = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
+  margin-top: 12px;
 `;
 
 const TrailerButton = styled.button`
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
   border: none;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.14);
   color: white;
   cursor: pointer;
   backdrop-filter: blur(6px);
+  transition: 0.2s ease;
+  font-size: 0.82rem;
+  font-weight: 600;
   &:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.24);
   }
 `;
 
 const UpcomingBadge = styled.div`
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 14px;
+  left: 14px;
   z-index: 3;
   background: #e50914;
   color: white;
-  padding: 6px 10px;
+  padding: 7px 12px;
   border-radius: 999px;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 10px 20px rgba(229, 9, 20, 0.25);
 `;

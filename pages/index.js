@@ -180,55 +180,72 @@ export default function HomePage() {
 
 const Main = styled.main`
   min-height: 100vh;
-  background: #141414;
+  background:
+    radial-gradient(circle at top, rgba(229, 9, 20, 0.12), transparent 30%),
+    #050505;
   color: white;
+  overflow-x: hidden;
 `;
 
 const HeroSection = styled.section`
   position: relative;
-  height: 70vh;
-  min-height: 600px;
+  min-height: 92vh;
   display: flex;
   align-items: center;
-  padding: 40px;
-  background-image: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop");
+  padding: 60px;
+  overflow: hidden;
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(5, 5, 5, 0.44),
+      rgba(5, 5, 5, 0.1),
+      rgba(5, 5, 5, 0.03)
+    ),
+    url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop");
   background-size: cover;
   background-position: center;
   @media (max-width: 768px) {
-    height: 60vh;
-    min-height: 500px;
-    padding: 24px;
+    min-height: 78vh;
+    padding: 30px 22px;
   }
 `;
 
 const Message = styled.p`
   text-align: center;
-  color: #aaa;
-  margin-top: 30px;
+  color: #9a9a9a;
+  margin-top: 40px;
+  font-size: 0.95rem;
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 28px;
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+    gap: 18px;
   }
 `;
 
 const ViewButton = styled.button`
+  position: relative;
+  overflow: hidden;
   border: none;
-  background: #e50914;
+  padding: 18px 30px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #e50914, #ff3040);
   color: white;
-  padding: 14px 24px;
-  border-radius: 6px;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.3px;
   cursor: pointer;
-  transition: 0.2s;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 20px 45px rgba(229, 9, 20, 0.35);
   &:hover {
-    background: #f40612;
-    transform: scale(1.03);
+    transform: translateY(-3px);
+    box-shadow: 0 28px 60px rgba(229, 9, 20, 0.42);
   }
 `;
 
@@ -237,50 +254,77 @@ const Overlay = styled.div`
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(20, 20, 20, 1),
-    rgba(20, 20, 20, 0.5),
-    rgba(20, 20, 20, 0.3)
+    rgba(5, 5, 5, 1) 5%,
+    rgba(5, 5, 5, 0.78) 35%,
+    rgba(5, 5, 5, 0.25) 100%
   );
 `;
 
 const HeroContent = styled.div`
   position: relative;
   z-index: 2;
-  max-width: 650px;
+  max-width: 760px;
 `;
 
 const HeroTitle = styled.h1`
-  font-size: 4rem;
-  font-weight: 800;
-  line-height: 1.05;
-  margin-bottom: 20px;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -4px;
+  margin-bottom: 26px;
+  background: linear-gradient(to bottom, #ffffff, #9d9d9d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    letter-spacing: -2px;
   }
 `;
 
 const HeroText = styled.p`
-  font-size: 1.1rem;
-  color: #ddd;
-  margin-bottom: 30px;
-  line-height: 1.6;
+  max-width: 620px;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #d0d0d0;
+  margin-bottom: 38px;
   @media (max-width: 768px) {
     font-size: 1rem;
   }
 `;
 
 const Content = styled.div`
-  max-width: 1400px;
-  margin: auto;
-  padding: 30px 24px 80px;
+  position: relative;
+  z-index: 2;
+  max-width: 1500px;
+  margin: -80px auto 0;
+  padding: 0 24px 120px;
 `;
 
 const Section = styled.section`
-  margin-top: 60px;
+  margin-top: 90px;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 1.8rem;
-  margin-bottom: 24px;
-  font-weight: 700;
+  position: relative;
+  display: inline-block;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 34px;
+  background: linear-gradient(to bottom, #ffffff, #9f9f9f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 70%;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      rgba(229, 9, 20, 1),
+      rgba(229, 9, 20, 0)
+    );
+  }
 `;

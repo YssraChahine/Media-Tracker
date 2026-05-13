@@ -50,21 +50,26 @@ const Wrapper = styled.section`
 `;
 
 const StatCard = styled.div`
-  background: #1f1f1f;
-  border-radius: 10px;
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 18px;
+  padding: 22px;
   text-align: center;
-  border: 1px solid #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  transition: 0.2s ease;
+  &:hover {
+    transform: translateY(-4px);
+  }
 `;
 
 const Number = styled.p`
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 800;
   color: #e50914;
 `;
 
 const Label = styled.p`
-  margin-top: 4px;
-  font-size: 0.8rem;
+  margin-top: 6px;
+  font-size: 0.82rem;
   color: #aaa;
 `;

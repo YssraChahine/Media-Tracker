@@ -15,25 +15,25 @@ export default function BookmarkButton({ isFavorite, onToggle }) {
 
 const Button = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 14px;
+  right: 14px;
   border: none;
   border-radius: 50%;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   cursor: pointer;
-  backdrop-filter: blur(6px);
-  background: ${({ $active }) => "rgba(0, 0, 0, 0.4)"};
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.45);
   color: white;
   opacity: 0;
-  transform: scale(0.9);
+  transform: scale(0.92);
   transition: all 0.2s ease;
   &:hover {
-    transform: scale(1.15);
-    background: ${({ $active }) => "rgba(0, 0, 0, 0.7)"};
+    transform: scale(1.08);
+    background: rgba(0, 0, 0, 0.7);
   }
 `;

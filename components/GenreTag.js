@@ -5,9 +5,11 @@ export default function GenreTag({ label }) {
 }
 
 const Tag = styled.span`
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.7rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 `;
