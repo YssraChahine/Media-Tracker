@@ -33,27 +33,54 @@ export default function RecommendationsSection({
 }
 
 const Wrapper = styled.section`
-  margin-top: 60px;
+  margin-top: 90px;
+  position: relative;
 `;
 
 const Heading = styled.h2`
-  font-size: 1.7rem;
-  margin-bottom: 20px;
-  font-weight: 700;
+  position: relative;
+  display: inline-block;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 34px;
+  background: linear-gradient(to bottom, #ffffff, #9f9f9f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 65%;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      rgba(229, 9, 20, 1),
+      rgba(229, 9, 20, 0)
+    );
+  }
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 24px;
-
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 28px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 18px;
   }
 `;
 
-const Fallback = styled.p`
+const Fallback = styled.div`
   margin-top: 40px;
-  color: #999;
+  padding: 40px 30px;
+  border-radius: 28px;
+  text-align: center;
+  color: #9a9a9a;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  font-size: 1rem;
 `;

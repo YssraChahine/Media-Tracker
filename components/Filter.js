@@ -64,29 +64,38 @@ const StatusGroup = styled.div`
   flex-wrap: wrap;
 `;
 
-const StatusButton = styled.button`
-  background: ${({ $active }) => ($active ? "#e50914" : "#222")};
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-`;
-
 const RightSide = styled.div`
   display: flex;
   gap: 8px;
 `;
 
-const FavButton = styled.button`
-  background: ${({ $active }) => ($active ? "#e50914" : "#222")};
-  color: white;
+const StatusButton = styled.button`
+  background: ${({ $active }) =>
+    $active ? "#e50914" : "rgba(255,255,255,0.08)"};
   border: none;
-  padding: 6px 12px;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: 600;
+  &:hover {
+    background: ${({ $active }) =>
+      $active ? "#ff1f2d" : "rgba(255,255,255,0.14)"};
+  }
 `;
 
+const FavButton = styled(StatusButton)``;
+
 const ResetButton = styled.button`
-  background: #333;
+  background: rgba(255, 255, 255, 0.08);
   color: white;
   border: none;
-  padding: 6px 12px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
 `;

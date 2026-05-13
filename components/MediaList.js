@@ -28,13 +28,11 @@ export default function MediaList({
 
 const Grid = styled.div`
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(2, 1fr);
-  @media (min-width: 600px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media (min-width: 900px) {
-    grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
   }
 `;
 

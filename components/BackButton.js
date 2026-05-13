@@ -12,12 +12,17 @@ export default function BackButton() {
 }
 
 const Button = styled.button`
-  background: transparent;
-  border: 1px solid #333;
-  color: #ccc;
-  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ddd;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  backdrop-filter: blur(6px);
   &:hover {
     color: white;
-    border-color: white;
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
   }
 `;
