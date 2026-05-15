@@ -14,25 +14,21 @@ export default function LoginPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    try {
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    setLoading(false);
 
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      router.push("/");
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+    if (result?.error) {
+      setError("Invalid email or password");
+      return;
     }
+    router.push("/");
   }
 
   return (

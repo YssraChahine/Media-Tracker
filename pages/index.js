@@ -31,8 +31,9 @@ export default function HomePage() {
     fetcher
   );
 
-  const addedIds = media.map((item) => Number(item.apiId));
-
+  const addedIds = Array.isArray(media)
+    ? media.map((item) => Number(item.apiId))
+    : [];
   async function handleSearch(query) {
     setHasSearched(!!query);
 

@@ -15,6 +15,11 @@ const commentSchema = new mongoose.Schema({
 });
 
 const mediaSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   apiId: {
     type: String,
     required: true,

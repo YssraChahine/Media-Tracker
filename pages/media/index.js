@@ -57,18 +57,20 @@ export default function MediaPage() {
     }
   }
 
-  const filteredMedia = media.filter((item) => {
-    const matchesStatus =
-      filters.status === "all" || item.status === filters.status;
+  const filteredMedia = Array.isArray(media)
+    ? media.filter((item) => {
+        const matchesStatus =
+          filters.status === "all" || item.status === filters.status;
 
-    const matchesFavorites = !filters.favorites || item.isFavorite;
+        const matchesFavorites = !filters.favorites || item.isFavorite;
 
-    const matchesSearch = item.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
+        const matchesSearch = item.title
+          .toLowerCase()
+          .includes(search.toLowerCase());
 
-    return matchesStatus && matchesFavorites && matchesSearch;
-  });
+        return matchesStatus && matchesFavorites && matchesSearch;
+      })
+    : [];
 
   if (isLoading) {
     return (
