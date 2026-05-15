@@ -154,7 +154,7 @@ export default function MediaDetails() {
 
   return (
     <Main>
-      <BackLink href={backHref}>← Back</BackLink>
+      {/* <BackLink href={backHref}>← Back</BackLink> */}
 
       <Hero>
         <Backdrop
