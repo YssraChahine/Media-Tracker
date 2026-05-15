@@ -1,13 +1,24 @@
 import styled from "styled-components";
 
 export default function Insights({ media }) {
-  const total = media.length;
-  const planned = media.filter((item) => item.status === "planned").length;
-  const inProgress = media.filter(
+
+  const safeMedia = Array.isArray(media) ? media : [];
+  const total = safeMedia.length;
+  const planned = safeMedia.filter(
+    (item) => item.status === "planned"
+  ).length;
+
+  const inProgress = safeMedia.filter(
     (item) => item.status === "in progress"
   ).length;
-  const completed = media.filter((item) => item.status === "completed").length;
-  const favorites = media.filter((item) => item.isFavorite).length;
+
+  const completed = safeMedia.filter(
+    (item) => item.status === "completed"
+  ).length;
+
+  const favorites = safeMedia.filter(
+    (item) => item.isFavorite
+  ).length;
 
   return (
     <Wrapper>
