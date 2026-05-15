@@ -8,7 +8,7 @@ export default function BackButton() {
     router.push("/");
   }
 
-  return <Button onClick={handleClick}>Back to Home</Button>;
+  // return <Button onClick={handleClick}>Back to Home</Button>;
 }
 
 const Button = styled.button`

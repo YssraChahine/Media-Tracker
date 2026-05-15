@@ -1,5 +1,6 @@
 import GlobalStyle from "../styles";
 import { SessionProvider } from "next-auth/react";
+import Navbar from "@/components/Navbar";
 
 export default function App({
   Component,
@@ -8,6 +9,7 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <GlobalStyle />
+      <Navbar />
       <Component {...pageProps} />
     </SessionProvider>
   );
