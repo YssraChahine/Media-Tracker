@@ -1,14 +1,36 @@
 import useSWR from "swr";
 import styled from "styled-components";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import BackButton from "@/components/BackButton";
 import MediaList from "@/components/MediaList";
 import Filter from "@/components/Filter";
-import { useState } from "react";
 import Insights from "@/components/Insights";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function MediaPage() {
+  const router = useRouter();
+
+  const {
+    data: session,
+    status,
+  } = useSession();
+
+  if (status === "loading") {
+    return (
+      <Main>
+        <Message>Loading...</Message>
+      </Main>
+    );
+  }
+
+  if (!session) {
+    router.push("/login");
+    return null;
+  }
+
   const {
     data: media = [],
     error,
@@ -34,9 +56,11 @@ export default function MediaPage() {
           isFavorite: !currentState,
         }),
       });
+
       if (!response.ok) {
         throw new Error("Favorite update failed");
       }
+
       mutate();
     } catch (error) {
       console.error(error);
@@ -48,9 +72,11 @@ export default function MediaPage() {
       const response = await fetch(`/api/media/${id}`, {
         method: "DELETE",
       });
+
       if (!response.ok) {
         throw new Error("Delete failed");
       }
+
       mutate();
     } catch (error) {
       console.error(error);
@@ -135,10 +161,12 @@ export default function MediaPage() {
             </EmptyState>
           )}
 
-          {media.length === 0 && (
+          {Array.isArray(media) && media.length === 0 && (
             <EmptyState>
               <h3>No media added yet</h3>
-              <p>Start adding movies and series to build your collection.</p>
+              <p>
+                Start adding movies and series to build your collection.
+              </p>
             </EmptyState>
           )}
 
