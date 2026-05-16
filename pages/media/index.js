@@ -13,10 +13,21 @@ const fetcher = (url) => fetch(url).then((response) => response.json());
 export default function MediaPage() {
   const router = useRouter();
 
+  const { data: session, status } = useSession();
+
   const {
-    data: session,
-    status,
-  } = useSession();
+    data: media = [],
+    error,
+    isLoading,
+    mutate,
+  } = useSWR(session ? "/api/media" : null, fetcher);
+
+  const [search, setSearch] = useState("");
+
+  const [filters, setFilters] = useState({
+    status: "all",
+    favorites: false,
+  });
 
   if (status === "loading") {
     return (
@@ -30,20 +41,6 @@ export default function MediaPage() {
     router.push("/login");
     return null;
   }
-
-  const {
-    data: media = [],
-    error,
-    isLoading,
-    mutate,
-  } = useSWR("/api/media", fetcher);
-
-  const [search, setSearch] = useState("");
-
-  const [filters, setFilters] = useState({
-    status: "all",
-    favorites: false,
-  });
 
   async function handleToggleFavorite(id, currentState) {
     try {
@@ -164,9 +161,7 @@ export default function MediaPage() {
           {Array.isArray(media) && media.length === 0 && (
             <EmptyState>
               <h3>No media added yet</h3>
-              <p>
-                Start adding movies and series to build your collection.
-              </p>
+              <p>Start adding movies and series to build your collection.</p>
             </EmptyState>
           )}
 
