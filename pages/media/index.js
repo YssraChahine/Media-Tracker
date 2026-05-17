@@ -1,8 +1,6 @@
 import useSWR from "swr";
 import styled from "styled-components";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import BackButton from "@/components/BackButton";
 import MediaList from "@/components/MediaList";
 import Filter from "@/components/Filter";
@@ -11,10 +9,6 @@ import Insights from "@/components/Insights";
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function MediaPage() {
-  const router = useRouter();
-
-  const { data: session, status } = useSession();
-
   const {
     data: media = [],
     error,
@@ -28,19 +22,6 @@ export default function MediaPage() {
     status: "all",
     favorites: false,
   });
-
-  if (status === "loading") {
-    return (
-      <Main>
-        <Message>Loading...</Message>
-      </Main>
-    );
-  }
-
-  if (!session) {
-    router.push("/login");
-    return null;
-  }
 
   async function handleToggleFavorite(id, currentState) {
     try {
