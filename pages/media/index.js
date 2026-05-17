@@ -14,7 +14,7 @@ export default function MediaPage() {
     error,
     isLoading,
     mutate,
-  } = useSWR(session ? "/api/media" : null, fetcher);
+  } = useSWR("/api/media", fetcher);
 
   const [search, setSearch] = useState("");
 
