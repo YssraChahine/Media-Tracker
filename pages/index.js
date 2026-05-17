@@ -7,6 +7,7 @@ import useSWR from "swr";
 import MediaCard from "@/components/MediaCard";
 import RecommendationsSection from "@/components/RecommendationsSection";
 import UpcomingSection from "@/components/UpcomingSection";
+import toast from "react-hot-toast";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
@@ -73,17 +74,23 @@ export default function HomePage() {
               : "",
           }),
         });
-        if (!response.ok) throw new Error("Add failed");
+        if (!response.ok) {
+          throw new Error("Add failed");
+        }
+        toast.success("Added to your collection");
       } else {
         const removeResponse = await fetch(`/api/media/${existing._id}`, {
           method: "DELETE",
         });
-        if (!removeResponse.ok) throw new Error("Delete failed");
+        if (!removeResponse.ok) {
+          throw new Error("Delete failed");
+        }
+        toast.success("Removed from collection");
       }
       mutate();
     } catch (error) {
       console.error(error);
-      alert("Error saving media");
+      toast.error("Something went wrong");
     }
   }
 

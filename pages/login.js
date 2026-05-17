@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,6 +29,7 @@ export default function LoginPage() {
       setError("Invalid email or password");
       return;
     }
+    toast.success("Welcome back");
     router.push("/");
   }
 
